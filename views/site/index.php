@@ -75,8 +75,8 @@ $this->registerLinkTag([
     </nav>
     <div class="container-fluid">
         <div class="section1 row text-center">
-            <h1 class="col-xs-12">Tú eliges a quien contratar <img src="/images/icon(1).png"></h1>
-            <h1 class="col-xs-12">Tú eliges donde trabajar <img src="/images/engineer(1).png"></h1>
+            <h1 class="col-xs-12">Tú eliges a quien contratar <img src="/images/icon1.png"></h1>
+            <h1 class="col-xs-12">Tú eliges donde trabajar <img src="/images/engineer.png"></h1>
             <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                 <button class="btn btn-lg btn-success col-sm-5">BUSCAR EMPLEO</button>
                 <?php echo Html::a('CONTRATAR', "#", ['class' => 'btn btn-lg btn-danger col-sm-offset-2 col-sm-5']); ?>
