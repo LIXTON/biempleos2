@@ -115,8 +115,8 @@ $this->registerLinkTag([
                 <div class="col-sm-4 col-sm-offset-2">
                     Enlaces
                     <hr>
-                    <?php echo Html::a('Términos y Condiciones', ['site/politicas']); ?><br>
-                    <?php echo Html::a('Política de Privacidad', ['site/terminos']); ?>
+                    <?php echo Html::a('Términos y Condiciones', ['site/terminos']); ?><br>
+                    <?php echo Html::a('Política de Privacidad', ['site/politicas']); ?>
                 </div>
                 <div class="col-sm-4">
                     <a class="btn btn-link">Contacto</a>
