@@ -23,7 +23,7 @@ class SignupForm extends Model
             ['correo', 'required'],
             ['correo', 'email'],
             ['correo', 'string', 'max' => 255],
-            ['correo', 'unique', 'targetClass' => '\models\User', 'message' => 'This email address has already been taken.'],
+            ['correo', 'unique', 'targetClass' => 'app\models\User', 'message' => 'This email address has already been taken.'],
 
             ['contrasena', 'required'],
             ['contrasena', 'string', 'min' => 6],
