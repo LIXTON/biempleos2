@@ -43,7 +43,7 @@ class SiteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                    //'logout' => ['post'],
                 ],
             ],
         ];
@@ -178,7 +178,7 @@ class SiteController extends Controller
             }
         }
 
-        return $this->render('signup', [
+        return $this->render('signupw', [
             'model' => $model,
         ]);
     }
@@ -193,13 +193,11 @@ class SiteController extends Controller
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup('aspirante')) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
+                return $this->actionLogin();
             }
         }
 
-        return $this->render('signup', [
+        return $this->render('signupm', [
             'model' => $model,
         ]);
     }
