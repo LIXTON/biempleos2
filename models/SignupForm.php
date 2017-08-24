@@ -35,7 +35,7 @@ class SignupForm extends Model
      *
      * @return User|null the saved model or null if saving fails
      */
-    public function signup()
+    public function signup($rol)
     {
         if (!$this->validate()) {
             return null;
@@ -45,6 +45,7 @@ class SignupForm extends Model
         $user->correo = $this->correo;
         $user->setPassword($this->contrasena);
         $user->generateAuthKey();
+        $user->rol = $rol;
         
         return $user->save() ? $user : null;
     }
