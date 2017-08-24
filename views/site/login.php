@@ -23,7 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'labelOptions' => ['class' => 'col-lg-1 control-label'],
         ],
     ]); ?>
-
+        
+        <input type="hidden" name="gcm">
+        
         <?= $form->field($model, 'correo')->textInput(['autofocus' => true]) ?>
 
         <?= $form->field($model, 'contrasena')->passwordInput() ?>

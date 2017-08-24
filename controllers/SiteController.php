@@ -88,13 +88,18 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if(Yii::$app->request->post('gcm') !== null) {
+            if ($model->load(Yii::$app->request->post()) && $model->login()) {
+                return $this->goBack();
+            }   
         } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post()) && $model->login()) {
+                return $this->goBack();
+            }
         }
+        return $this->render('login', [
+            'model' => $model,
+        ]);
     }
 
     /**
