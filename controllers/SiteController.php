@@ -12,6 +12,7 @@ use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
+use app\models\Aspirante;
 
 /**
  * Site controller
@@ -90,7 +91,17 @@ class SiteController extends Controller
         $model = new LoginForm();
         if(Yii::$app->request->post('gcm') !== null) {
             if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                return $this->goBack();
+
+                // Opteniendo al aspirante para asignarle la GCM Key
+                $aspirante = Aspirante::findOne(Yii::$app->user->id);
+
+                // se asigna la gcm key al aspirante
+                $aspirante->gcm = Yii::$app->request->post('gcm');
+
+                // guardando cambios
+                $aspirante->save();
+                
+                return $this->actionMovilmenu();
             }   
         } else {
             if ($model->load(Yii::$app->request->post()) && $model->login()) {
@@ -100,6 +111,16 @@ class SiteController extends Controller
         return $this->render('login', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * Nueva action creada para redireccionar al usuario movil
+     *
+     * @return mixed
+     */
+    public function actionMovilmenu()
+    {
+        return $this->render("movilmenu");
     }
 
     /**
@@ -198,6 +219,18 @@ class SiteController extends Controller
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup('aspirante')) {
+                // se crea un aspirante //
+                $aspirante = new Aspirante();
+                // se le asigna el id del user creado //
+                $aspirante->id_usuario = $user->id;
+                // se crea un gcm temporal "not set"
+                $aspirante->gcm = "not set";
+                // se activa su cuenta //
+                $aspirante->activo = 1;
+
+                // se guardan los cambios //
+                $aspirante->save();
+
                 return $this->actionLogin();
             }
         }
