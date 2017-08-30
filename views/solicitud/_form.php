@@ -12,7 +12,10 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id_usuario')->textInput() ?>
+    <?php 
+    // se retiro el id_usuario puesto esto no es necesario ya que solo el usuario puede editar su propia solicitud
+    //$form->field($model, 'id_usuario')->textInput() 
+    ?>
 
     <?= $form->field($model, 'foto')->textarea(['rows' => 6]) ?>
 

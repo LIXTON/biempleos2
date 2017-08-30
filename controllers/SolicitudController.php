@@ -64,7 +64,7 @@ class SolicitudController extends Controller
     public function actionCreate()
     {
         $model = new Solicitud();
-
+        $model->id_usuario = Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_usuario]);
         } else {
@@ -79,11 +79,15 @@ class SolicitudController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * Nota: se actualizo el metodo para poder editar y seleccionar la 
+     * solicitud del usuario
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
+    public function actionUpdate(){
+        $id_usuario = Yii::$app->user->id;
+        $model = Solicitud::findOne($id_usuario);
+        if(!$model){
+            return $this->actionCreate();
+        }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_usuario]);
         } else {
