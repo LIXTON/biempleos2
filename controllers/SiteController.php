@@ -13,6 +13,7 @@ use app\models\ResetPasswordForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
 use app\models\Aspirante;
+use app\models\Solicitud;
 
 /**
  * Site controller
@@ -91,13 +92,10 @@ class SiteController extends Controller
         $model = new LoginForm();
         if(Yii::$app->request->post('gcm') !== null) {
             if ($model->load(Yii::$app->request->post()) && $model->login()) {
-
                 // Opteniendo al aspirante para asignarle la GCM Key
                 $aspirante = Aspirante::findOne(Yii::$app->user->id);
-
                 // se asigna la gcm key al aspirante
                 $aspirante->gcm = Yii::$app->request->post('gcm');
-
                 // guardando cambios
                 $aspirante->save();
                 
@@ -118,9 +116,18 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionMovilmenu()
-    {
-        return $this->render("movilmenu");
+    public function actionMovilmenu(){
+        // cargamos datos del aspirante //
+        $solicitud = Solicitud::findOne(Yii::$app->user->id);
+        // se crea el contenedor de datos //
+        $data = array("nombre"=>"no set");
+        // se valida que cargo la solicitud //
+        if($solicitud){
+            // cargamos datos en el contenedor //
+            $data = array("nombre"=>$solicitud->nombre);
+        }
+        // cargamos el render y mandamos la información //
+        return $this->render("movilmenu", array("data"=>$data));
     }
 
     /**
