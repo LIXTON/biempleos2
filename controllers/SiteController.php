@@ -15,6 +15,8 @@ use app\models\ContactForm;
 use app\models\Aspirante;
 use app\models\Solicitud;
 
+use app\models\Empresa;
+
 /**
  * Site controller
  */
@@ -202,9 +204,19 @@ class SiteController extends Controller
      */
     public function actionSignupw()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup('empresa')) {
+        // Variable $model se cambio por $signup //
+        $signup = new SignupForm();
+        // Se crea una empresa //
+        $empresa = new Empresa();
+        if ($signup->load(Yii::$app->request->post()) && $empresa->load(Yii::$app->request->post())) {
+            if ($user = $signup->signup('empresa')) {
+                // Se registra la relacion de empresa y usuario //
+                $empresa->id_usuario = $user->id;
+                // Se da un mes gratuito //
+                $empresa->fecha_expiracion = date('Y-m-d H:i:s', strtotime("+1 month"));
+                // Se registra en la bd //
+                $empresa->save();
+                
                 if (Yii::$app->getUser()->login($user)) {
                     return $this->goHome();
                 }
@@ -212,7 +224,8 @@ class SiteController extends Controller
         }
 
         return $this->render('signupw', [
-            'model' => $model,
+            'signup' => $usuario,
+            'empresa' => $empresa,
         ]);
     }
     
@@ -223,9 +236,10 @@ class SiteController extends Controller
      */
     public function actionSignupm()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup('aspirante')) {
+        // Variable $model se cambio por $signup //
+        $signup = new SignupForm();
+        if ($signup->load(Yii::$app->request->post())) {
+            if ($user = $signup->signup('aspirante')) {
                 // se crea un aspirante //
                 $aspirante = new Aspirante();
                 // se le asigna el id del user creado //
@@ -243,7 +257,7 @@ class SiteController extends Controller
         }
 
         return $this->render('signupm', [
-            'model' => $model,
+            'signup' => $signup,
         ]);
     }
 

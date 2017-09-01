@@ -11,6 +11,7 @@ class SignupForm extends Model
 {
     public $correo;
     public $contrasena;
+    public $recontrasena;
 
 
     /**
@@ -19,14 +20,16 @@ class SignupForm extends Model
     public function rules()
     {
         return [
+            // Simplificacion de codigo y se agrego el campo repetir contraseña //
+            [['correo', 'contrasena', 'recontrasena'], 'required'],
             ['correo', 'trim'],
-            ['correo', 'required'],
             ['correo', 'email'],
             ['correo', 'string', 'max' => 255],
             ['correo', 'unique', 'targetClass' => 'app\models\User', 'message' => 'This email address has already been taken.'],
 
-            ['contrasena', 'required'],
-            ['contrasena', 'string', 'min' => 6],
+            // Repetir contraseña tiene las mismas reglas que contraseña //
+            [['contrasena', 'recontrasena'], 'string', 'min' => 6],
+            ['recontrasena', 'compare', 'compareAttribute' => 'contrasena', 'message' => 'Las contraseñas no coinciden'],
         ];
     }
 

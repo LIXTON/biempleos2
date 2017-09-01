@@ -21,9 +21,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
-                <?= $form->field($model, 'correo')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($signup, 'correo')->textInput(['autofocus' => true]) ?>
 
-                <?= $form->field($model, 'contrasena')->passwordInput() ?>
+                <?= $form->field($signup, 'contrasena')->passwordInput() ?>
+            
+                <?= $form->field($signup, 'recontrasena')->passwordInput() ?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
