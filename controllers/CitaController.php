@@ -20,10 +20,29 @@ class CitaController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                // Se crea un nuevo AccessRule para lidiar con los roles //
+                'ruleConfig' => [
+                    'class' => app\components\AccessRule::className(),
+                ],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update'],
+                        'roles' => ['empresa'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    //'delete' => ['POST'],
                 ],
             ],
         ];
@@ -102,12 +121,13 @@ class CitaController extends Controller
      * @param integer $id_usuario
      * @return mixed
      */
+    /*  Posible reutilizacion con cambios o eliminacion
     public function actionDelete($id, $id_usuario)
     {
         $this->findModel($id, $id_usuario)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the Cita model based on its primary key value.

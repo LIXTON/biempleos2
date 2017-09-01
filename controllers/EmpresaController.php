@@ -20,10 +20,24 @@ class EmpresaController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                // Se crea un nuevo AccessRule para lidiar con los roles //
+                'ruleConfig' => [
+                    'class' => app\components\AccessRule::className(),
+                ],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view', 'update'],
+                        'roles' => ['empresa'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    //'delete' => ['POST'],
                 ],
             ],
         ];
@@ -61,7 +75,7 @@ class EmpresaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    /*public function actionCreate()
     {
         $model = new Empresa();
 
@@ -72,7 +86,7 @@ class EmpresaController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Updates an existing Empresa model.
@@ -99,12 +113,12 @@ class EmpresaController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    /*public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the Empresa model based on its primary key value.

@@ -20,10 +20,29 @@ class VacanteAspiranteController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                // Se crea un nuevo AccessRule para lidiar con los roles //
+                'ruleConfig' => [
+                    'class' => app\components\AccessRule::className(),
+                ],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update'],
+                        'roles' => ['empresa'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    //'delete' => ['POST'],
                 ],
             ],
         ];
@@ -102,12 +121,13 @@ class VacanteAspiranteController extends Controller
      * @param integer $id_vacante
      * @return mixed
      */
+    /*  Posible reutilizacion con cambios o eliminacion
     public function actionDelete($id_usuario, $id_vacante)
     {
         $this->findModel($id_usuario, $id_vacante)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the VacanteAspirante model based on its primary key value.

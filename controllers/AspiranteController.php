@@ -20,6 +20,20 @@ class AspiranteController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                // Se crea un nuevo AccessRule para lidiar con los roles //
+                'ruleConfig' => [
+                    'class' => app\components\AccessRule::className(),
+                ],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view', 'update'],
+                        'roles' => ['aspirante'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -61,6 +75,7 @@ class AspiranteController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+    /*  Posible reutilizacion con cambios o eliminacion
     public function actionCreate()
     {
         $model = new Aspirante();
@@ -72,7 +87,7 @@ class AspiranteController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Updates an existing Aspirante model.
@@ -99,12 +114,13 @@ class AspiranteController extends Controller
      * @param integer $id
      * @return mixed
      */
+    /*  Posible reutilizacion con cambios o eliminacion
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the Aspirante model based on its primary key value.

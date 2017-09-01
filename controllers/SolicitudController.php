@@ -20,10 +20,29 @@ class SolicitudController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                // Se crea un nuevo AccessRule para lidiar con los roles //
+                'ruleConfig' => [
+                    'class' => app\components\AccessRule::className(),
+                ],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update'],
+                        'roles' => ['aspirante'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    //'delete' => ['POST'],
                 ],
             ],
         ];
@@ -103,12 +122,13 @@ class SolicitudController extends Controller
      * @param integer $id
      * @return mixed
      */
+    /*  Posible reutilizacion con cambios o eliminacion
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the Solicitud model based on its primary key value.
