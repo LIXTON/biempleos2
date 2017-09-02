@@ -18,7 +18,6 @@ use Yii;
  * @property string $fecha_publicacion
  * @property string $fecha_finalizacion
  * @property integer $no_cita
- * @property string $fecha_expiracion
  *
  * @property Empresa $idEmpresa
  * @property Local $idLocal
@@ -40,10 +39,10 @@ class Vacante extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_empresa', 'id_local', 'puesto', 'requisito', 'horario', 'no_cita', 'fecha_expiracion'], 'required'],
+            [['id_empresa', 'id_local', 'puesto', 'requisito', 'horario', 'no_cita'], 'required'],
             [['id_empresa', 'id_local', 'no_cita'], 'integer'],
             [['ofrece', 'requisito'], 'string'],
-            [['fecha_publicacion', 'fecha_finalizacion', 'fecha_expiracion'], 'safe'],
+            [['fecha_publicacion', 'fecha_finalizacion'], 'safe'],
             [['puesto'], 'string', 'max' => 255],
             [['sueldo', 'horario'], 'string', 'max' => 100],
             [['id_empresa'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_empresa' => 'id_usuario']],
@@ -68,7 +67,6 @@ class Vacante extends \yii\db\ActiveRecord
             'fecha_publicacion' => Yii::t('app', 'Fecha Publicacion'),
             'fecha_finalizacion' => Yii::t('app', 'Fecha Finalizacion'),
             'no_cita' => Yii::t('app', 'No Cita'),
-            'fecha_expiracion' => Yii::t('app', 'Fecha Expiracion'),
         ];
     }
 

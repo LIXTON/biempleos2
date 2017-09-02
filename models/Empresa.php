@@ -9,7 +9,6 @@ use Yii;
  *
  * @property integer $id_usuario
  * @property string $nombre
- * @property string $fecha_expiracion
  *
  * @property Cita[] $citas
  * @property Usuario $idUsuario
@@ -35,7 +34,6 @@ class Empresa extends \yii\db\ActiveRecord
         return [
             [['id_usuario', 'nombre'], 'required'],
             [['id_usuario'], 'integer'],
-            [['fecha_expiracion'], 'safe'],
             [['nombre'], 'string', 'max' => 100],
             [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_usuario' => 'id']],
         ];

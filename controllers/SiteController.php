@@ -16,6 +16,8 @@ use app\models\Aspirante;
 use app\models\Solicitud;
 
 use app\models\Empresa;
+use app\models\EmpresaPaquete;
+use app\models\Paquete;
 
 /**
  * Site controller
@@ -212,10 +214,14 @@ class SiteController extends Controller
             if ($user = $signup->signup('empresa')) {
                 // Se registra la relacion de empresa y usuario //
                 $empresa->id_usuario = $user->id;
-                // Se da un mes gratuito //
-                $empresa->fecha_expiracion = date('Y-m-d H:i:s', strtotime("+1 month"));
-                // Se registra en la bd //
-                $empresa->save();
+                // Se registra empresa en la bd //
+                if ($empresa->save()) {
+                    // Se crea el paquete gratuito de 1 mes a la empresa //
+                    $empresaPaquete = new EmpresaPaquete();
+                    $empresaPaquete->id_empresa = $user->id;
+                    $empresaPaquete->id_paquete = Paquete::findOne(['precio' => 0])->id;
+                    $empresaPaquete->fecha_expiracion = date('Y-m-d H:i:s', strtotime("+1 month"));
+                }
                 
                 if (Yii::$app->getUser()->login($user)) {
                     return $this->goHome();

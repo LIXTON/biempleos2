@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-09-2017 a las 06:06:39
+-- Tiempo de generación: 02-09-2017 a las 07:39:59
 -- Versión del servidor: 5.7.9
 -- Versión de PHP: 5.6.16
 
@@ -65,7 +65,6 @@ DROP TABLE IF EXISTS `empresa`;
 CREATE TABLE IF NOT EXISTS `empresa` (
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `fecha_expiracion` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -79,9 +78,12 @@ DROP TABLE IF EXISTS `empresa_paquete`;
 CREATE TABLE IF NOT EXISTS `empresa_paquete` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_empresa` int(11) NOT NULL,
+  `id_paquete` int(11) NOT NULL,
   `no_vacante` int(11) NOT NULL,
+  `fecha_expiracion` date NOT NULL,
   PRIMARY KEY (`id`,`id_empresa`) USING BTREE,
-  KEY `FK_EmpresaEP` (`id_empresa`)
+  KEY `FK_EmpresaEP` (`id_empresa`),
+  KEY `FK_PaqueteEP` (`id_paquete`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -137,7 +139,14 @@ CREATE TABLE IF NOT EXISTS `paquete` (
   `duracion` varchar(20) DEFAULT NULL,
   `precio` double NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `paquete`
+--
+
+INSERT INTO `paquete` (`id`, `nombre`, `descripcion`, `no_vacante`, `no_cita`, `duracion`, `precio`) VALUES
+(1, 'Prueba Gratuita', 'Se da 1 mes gratis con todas las funcionalidades', -1, -1, '1 mes', 0);
 
 -- --------------------------------------------------------
 
@@ -273,7 +282,6 @@ CREATE TABLE IF NOT EXISTS `vacante` (
   `fecha_publicacion` timestamp NULL DEFAULT NULL,
   `fecha_finalizacion` timestamp NULL DEFAULT NULL,
   `no_cita` int(11) NOT NULL,
-  `fecha_expiracion` date NOT NULL,
   PRIMARY KEY (`id`,`id_empresa`,`id_local`) USING BTREE,
   KEY `FK_EmpresaVacante` (`id_empresa`),
   KEY `FK_LocalVacante` (`id_local`)
@@ -325,7 +333,8 @@ ALTER TABLE `empresa`
 -- Filtros para la tabla `empresa_paquete`
 --
 ALTER TABLE `empresa_paquete`
-  ADD CONSTRAINT `FK_EmpresaEP` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_usuario`);
+  ADD CONSTRAINT `FK_EmpresaEP` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_usuario`),
+  ADD CONSTRAINT `FK_PaqueteEP` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id`);
 
 --
 -- Filtros para la tabla `local`
