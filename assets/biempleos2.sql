@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-08-2017 a las 00:34:18
+-- Tiempo de generación: 02-09-2017 a las 06:06:39
 -- Versión del servidor: 5.7.9
 -- Versión de PHP: 5.6.16
 
@@ -43,13 +43,16 @@ CREATE TABLE IF NOT EXISTS `aspirante` (
 DROP TABLE IF EXISTS `cita`;
 CREATE TABLE IF NOT EXISTS `cita` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_usuario` int(11) NOT NULL,
+  `id_empresa` int(11) NOT NULL,
   `id_local` int(11) DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `id_va` int(11) NOT NULL,
   `fecha` timestamp NOT NULL,
   `mensaje` longtext NOT NULL,
-  PRIMARY KEY (`id`,`id_usuario`) USING BTREE,
-  KEY `id_local` (`id_local`),
-  KEY `FK_EmpresaCita` (`id_usuario`)
+  PRIMARY KEY (`id`,`id_empresa`) USING BTREE,
+  KEY `FK_EmpresaCita` (`id_empresa`),
+  KEY `FK_VACita` (`id_va`) USING BTREE,
+  KEY `FK_LocalCita` (`id_local`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -62,8 +65,23 @@ DROP TABLE IF EXISTS `empresa`;
 CREATE TABLE IF NOT EXISTS `empresa` (
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `fecha_expiracion` timestamp NOT NULL,
+  `fecha_expiracion` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `empresa_paquete`
+--
+
+DROP TABLE IF EXISTS `empresa_paquete`;
+CREATE TABLE IF NOT EXISTS `empresa_paquete` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_empresa` int(11) NOT NULL,
+  `no_vacante` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`id_empresa`) USING BTREE,
+  KEY `FK_EmpresaEP` (`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -75,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
 DROP TABLE IF EXISTS `local`;
 CREATE TABLE IF NOT EXISTS `local` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_usuario` int(11) NOT NULL,
+  `id_empresa` int(11) NOT NULL,
   `calle` varchar(100) NOT NULL,
   `numero` int(11) NOT NULL,
   `colonia` varchar(100) NOT NULL,
@@ -84,8 +102,41 @@ CREATE TABLE IF NOT EXISTS `local` (
   `estado` varchar(100) NOT NULL,
   `ciudad` varchar(100) NOT NULL,
   `activo` tinyint(4) NOT NULL,
-  PRIMARY KEY (`id`,`id_usuario`) USING BTREE,
-  KEY `FK_EmpresaLocal` (`id_usuario`)
+  PRIMARY KEY (`id`,`id_empresa`) USING BTREE,
+  KEY `FK_EmpresaLocal` (`id_empresa`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `oferta`
+--
+
+DROP TABLE IF EXISTS `oferta`;
+CREATE TABLE IF NOT EXISTS `oferta` (
+  `id_paquete` int(11) NOT NULL,
+  `descuento` varchar(20) NOT NULL,
+  `paquete_padre` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_paquete`),
+  KEY `paquete_padre` (`paquete_padre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `paquete`
+--
+
+DROP TABLE IF EXISTS `paquete`;
+CREATE TABLE IF NOT EXISTS `paquete` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) NOT NULL,
+  `descripcion` longtext,
+  `no_vacante` int(11) NOT NULL,
+  `no_cita` int(11) NOT NULL,
+  `duracion` varchar(20) DEFAULT NULL,
+  `precio` double NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -96,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `local` (
 
 DROP TABLE IF EXISTS `solicitud`;
 CREATE TABLE IF NOT EXISTS `solicitud` (
-  `id_usuario` int(11) NOT NULL,
+  `id_aspirante` int(11) NOT NULL,
   `foto` longtext,
   `nombre` text,
   `fecha_nacimiento` date DEFAULT NULL,
@@ -181,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `solicitud` (
   `acreedor` text,
   `abono_mensual` double DEFAULT NULL,
   `gastos_mensuales` double DEFAULT NULL,
-  PRIMARY KEY (`id_usuario`)
+  PRIMARY KEY (`id_aspirante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -212,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 DROP TABLE IF EXISTS `vacante`;
 CREATE TABLE IF NOT EXISTS `vacante` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_usuario` int(11) NOT NULL,
+  `id_empresa` int(11) NOT NULL,
   `id_local` int(11) NOT NULL,
   `puesto` varchar(255) NOT NULL,
   `sueldo` varchar(100) DEFAULT NULL,
@@ -221,8 +272,10 @@ CREATE TABLE IF NOT EXISTS `vacante` (
   `horario` varchar(100) NOT NULL,
   `fecha_publicacion` timestamp NULL DEFAULT NULL,
   `fecha_finalizacion` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`,`id_usuario`,`id_local`) USING BTREE,
-  KEY `FK_EmpresaVacante` (`id_usuario`),
+  `no_cita` int(11) NOT NULL,
+  `fecha_expiracion` date NOT NULL,
+  PRIMARY KEY (`id`,`id_empresa`,`id_local`) USING BTREE,
+  KEY `FK_EmpresaVacante` (`id_empresa`),
   KEY `FK_LocalVacante` (`id_local`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -234,12 +287,14 @@ CREATE TABLE IF NOT EXISTS `vacante` (
 
 DROP TABLE IF EXISTS `vacante_aspirante`;
 CREATE TABLE IF NOT EXISTS `vacante_aspirante` (
-  `id_usuario` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_aspirante` int(11) NOT NULL,
   `id_vacante` int(11) NOT NULL,
   `estado` varchar(20) NOT NULL,
   `fecha_cambio_estado` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_usuario`,`id_vacante`),
-  KEY `FK_VacanteVA` (`id_vacante`)
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `FK_VacanteVA` (`id_vacante`),
+  KEY `FK_AspiranteVA` (`id_aspirante`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -256,8 +311,9 @@ ALTER TABLE `aspirante`
 -- Filtros para la tabla `cita`
 --
 ALTER TABLE `cita`
-  ADD CONSTRAINT `FK_EmpresaCita` FOREIGN KEY (`id_usuario`) REFERENCES `empresa` (`id_usuario`),
-  ADD CONSTRAINT `FK_LocalCita` FOREIGN KEY (`id_local`) REFERENCES `local` (`id`);
+  ADD CONSTRAINT `FK_EmpresaCita` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_usuario`),
+  ADD CONSTRAINT `FK_LocalCita` FOREIGN KEY (`id_local`) REFERENCES `local` (`id`),
+  ADD CONSTRAINT `FK_VACita` FOREIGN KEY (`id_va`) REFERENCES `vacante_aspirante` (`id`);
 
 --
 -- Filtros para la tabla `empresa`
@@ -266,29 +322,42 @@ ALTER TABLE `empresa`
   ADD CONSTRAINT `FK_UsuarioEmpresa` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`);
 
 --
+-- Filtros para la tabla `empresa_paquete`
+--
+ALTER TABLE `empresa_paquete`
+  ADD CONSTRAINT `FK_EmpresaEP` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_usuario`);
+
+--
 -- Filtros para la tabla `local`
 --
 ALTER TABLE `local`
-  ADD CONSTRAINT `FK_EmpresaLocal` FOREIGN KEY (`id_usuario`) REFERENCES `empresa` (`id_usuario`);
+  ADD CONSTRAINT `FK_EmpresaLocal` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_usuario`);
+
+--
+-- Filtros para la tabla `oferta`
+--
+ALTER TABLE `oferta`
+  ADD CONSTRAINT `FK_PaqueteOferta` FOREIGN KEY (`id_paquete`) REFERENCES `paquete` (`id`),
+  ADD CONSTRAINT `FK_PaquetePadreOferta` FOREIGN KEY (`paquete_padre`) REFERENCES `paquete` (`id`);
 
 --
 -- Filtros para la tabla `solicitud`
 --
 ALTER TABLE `solicitud`
-  ADD CONSTRAINT `FK_AspiranteSolicitud` FOREIGN KEY (`id_usuario`) REFERENCES `aspirante` (`id_usuario`);
+  ADD CONSTRAINT `FK_AspiranteSolicitud` FOREIGN KEY (`id_aspirante`) REFERENCES `aspirante` (`id_usuario`);
 
 --
 -- Filtros para la tabla `vacante`
 --
 ALTER TABLE `vacante`
-  ADD CONSTRAINT `FK_EmpresaVacante` FOREIGN KEY (`id_usuario`) REFERENCES `empresa` (`id_usuario`),
+  ADD CONSTRAINT `FK_EmpresaVacante` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_usuario`),
   ADD CONSTRAINT `FK_LocalVacante` FOREIGN KEY (`id_local`) REFERENCES `local` (`id`);
 
 --
 -- Filtros para la tabla `vacante_aspirante`
 --
 ALTER TABLE `vacante_aspirante`
-  ADD CONSTRAINT `FK_AspiranteVA` FOREIGN KEY (`id_usuario`) REFERENCES `aspirante` (`id_usuario`),
+  ADD CONSTRAINT `FK_AspiranteVA` FOREIGN KEY (`id_aspirante`) REFERENCES `aspirante` (`id_usuario`),
   ADD CONSTRAINT `FK_VacanteVA` FOREIGN KEY (`id_vacante`) REFERENCES `vacante` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
