@@ -12,7 +12,8 @@ use Yii;
  * @property string $fecha_expiracion
  *
  * @property Cita[] $citas
- * @property User $idUsuario
+ * @property Usuario $idUsuario
+ * @property EmpresaPaquete[] $empresaPaquetes
  * @property Local[] $locals
  * @property Vacante[] $vacantes
  */
@@ -32,7 +33,7 @@ class Empresa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_usuario', 'nombre', 'fecha_expiracion'], 'required'],
+            [['id_usuario', 'nombre'], 'required'],
             [['id_usuario'], 'integer'],
             [['fecha_expiracion'], 'safe'],
             [['nombre'], 'string', 'max' => 100],
@@ -57,7 +58,7 @@ class Empresa extends \yii\db\ActiveRecord
      */
     public function getCitas()
     {
-        return $this->hasMany(Cita::className(), ['id_usuario' => 'id_usuario']);
+        return $this->hasMany(Cita::className(), ['id_empresa' => 'id_usuario']);
     }
 
     /**
@@ -71,9 +72,17 @@ class Empresa extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getEmpresaPaquetes()
+    {
+        return $this->hasMany(EmpresaPaquete::className(), ['id_empresa' => 'id_usuario']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getLocals()
     {
-        return $this->hasMany(Local::className(), ['id_usuario' => 'id_usuario']);
+        return $this->hasMany(Local::className(), ['id_empresa' => 'id_usuario']);
     }
 
     /**
@@ -81,6 +90,6 @@ class Empresa extends \yii\db\ActiveRecord
      */
     public function getVacantes()
     {
-        return $this->hasMany(Vacante::className(), ['id_usuario' => 'id_usuario']);
+        return $this->hasMany(Vacante::className(), ['id_empresa' => 'id_usuario']);
     }
 }

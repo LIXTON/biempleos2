@@ -11,10 +11,9 @@ use Yii;
  * @property string $gcm
  * @property integer $activo
  *
- * @property User $idUsuario
+ * @property Usuario $idUsuario
  * @property Solicitud $solicitud
  * @property VacanteAspirante[] $vacanteAspirantes
- * @property Vacante[] $idVacantes
  */
 class Aspirante extends \yii\db\ActiveRecord
 {
@@ -64,7 +63,7 @@ class Aspirante extends \yii\db\ActiveRecord
      */
     public function getSolicitud()
     {
-        return $this->hasOne(Solicitud::className(), ['id_usuario' => 'id_usuario']);
+        return $this->hasOne(Solicitud::className(), ['id_aspirante' => 'id_usuario']);
     }
 
     /**
@@ -72,14 +71,6 @@ class Aspirante extends \yii\db\ActiveRecord
      */
     public function getVacanteAspirantes()
     {
-        return $this->hasMany(VacanteAspirante::className(), ['id_usuario' => 'id_usuario']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getIdVacantes()
-    {
-        return $this->hasMany(Vacante::className(), ['id' => 'id_vacante'])->viaTable('vacante_aspirante', ['id_usuario' => 'id_usuario']);
+        return $this->hasMany(VacanteAspirante::className(), ['id_aspirante' => 'id_usuario']);
     }
 }

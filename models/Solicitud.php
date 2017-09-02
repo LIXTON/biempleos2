@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "solicitud".
  *
- * @property integer $id_usuario
+ * @property integer $id_aspirante
  * @property string $foto
  * @property string $nombre
  * @property string $fecha_nacimiento
@@ -93,7 +93,7 @@ use Yii;
  * @property double $abono_mensual
  * @property double $gastos_mensuales
  *
- * @property Aspirante $idUsuario
+ * @property Aspirante $idAspirante
  */
 class Solicitud extends \yii\db\ActiveRecord
 {
@@ -111,12 +111,12 @@ class Solicitud extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_usuario'], 'required'],
-            [['id_usuario', 'sexo', 'estado_civil', 'licencia', 'clase_licencia', 'deportista', 'club', 'estudio', 'titulo', 'porcentaje', 'trabajo_anterior', 'parientes', 'afianzado', 'sindicato', 'seguro_vida', 'viajar', 'cambiar_residencia', 'otros_ingresos', 'conyuge_trabaja', 'casa_propia', 'paga_renta', 'dependientes', 'automovil', 'deudas'], 'integer'],
+            [['id_aspirante'], 'required'],
+            [['id_aspirante', 'sexo', 'estado_civil', 'licencia', 'clase_licencia', 'deportista', 'club', 'estudio', 'titulo', 'porcentaje', 'trabajo_anterior', 'parientes', 'afianzado', 'sindicato', 'seguro_vida', 'viajar', 'cambiar_residencia', 'otros_ingresos', 'conyuge_trabaja', 'casa_propia', 'paga_renta', 'dependientes', 'automovil', 'deudas'], 'integer'],
             [['foto', 'nombre', 'nacionalidad', 'calle', 'numero', 'colonia', 'codigo_postal', 'curp', 'rfc', 'nss', 'afore', 'cartilla_militar', 'pasaporte', 'numero_licencia', 'deporte', 'pasatiempo', 'meta', 'escuela', 'idioma', 'funciones_oficina', 'maquinaria_oficina', 'software', 'otras_funciones', 'compania', 'direccion', 'telefono', 'puesto', 'motivo_separacion', 'nombre_jefe', 'puesto_jefe', 'nombre_ref1', 'domicilio_ref1', 'telefono_ref1', 'ocupacion_ref1', 'nombre_ref2', 'domicilio_ref2', 'telefono_ref2', 'ocupacion_ref2', 'nombre_ref3', 'domicilio_ref3', 'telefono_ref3', 'ocupacion_ref3', 'acreedor'], 'string'],
             [['fecha_nacimiento', 'inicio', 'finalizacion'], 'safe'],
             [['estatura', 'peso', 'tiempo_trabajo', 'sueldo_inicial', 'sueldo_final', 'tiempo_ref1', 'tiempo_ref2', 'tiempo_ref3', 'importe_ingresos', 'percepcion', 'valor_casa', 'renta', 'importe_deudas', 'abono_mensual', 'gastos_mensuales'], 'number'],
-            [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Aspirante::className(), 'targetAttribute' => ['id_usuario' => 'id_usuario']],
+            [['id_aspirante'], 'exist', 'skipOnError' => true, 'targetClass' => Aspirante::className(), 'targetAttribute' => ['id_aspirante' => 'id_usuario']],
         ];
     }
 
@@ -126,7 +126,7 @@ class Solicitud extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_usuario' => Yii::t('app', 'Id Usuario'),
+            'id_aspirante' => Yii::t('app', 'Id Aspirante'),
             'foto' => Yii::t('app', 'Foto'),
             'nombre' => Yii::t('app', 'Nombre'),
             'fecha_nacimiento' => Yii::t('app', 'Fecha Nacimiento'),
@@ -217,8 +217,8 @@ class Solicitud extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdUsuario()
+    public function getIdAspirante()
     {
-        return $this->hasOne(Aspirante::className(), ['id_usuario' => 'id_usuario']);
+        return $this->hasOne(Aspirante::className(), ['id_usuario' => 'id_aspirante']);
     }
 }

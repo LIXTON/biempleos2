@@ -7,12 +7,14 @@ use Yii;
 /**
  * This is the model class for table "vacante_aspirante".
  *
- * @property integer $id_usuario
+ * @property integer $id
+ * @property integer $id_aspirante
  * @property integer $id_vacante
  * @property string $estado
  * @property string $fecha_cambio_estado
  *
- * @property Aspirante $idUsuario
+ * @property Cita[] $citas
+ * @property Aspirante $idAspirante
  * @property Vacante $idVacante
  */
 class VacanteAspirante extends \yii\db\ActiveRecord
@@ -31,11 +33,11 @@ class VacanteAspirante extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_usuario', 'id_vacante', 'estado'], 'required'],
-            [['id_usuario', 'id_vacante'], 'integer'],
+            [['id', 'id_aspirante', 'id_vacante', 'estado'], 'required'],
+            [['id', 'id_aspirante', 'id_vacante'], 'integer'],
             [['fecha_cambio_estado'], 'safe'],
             [['estado'], 'string', 'max' => 20],
-            [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Aspirante::className(), 'targetAttribute' => ['id_usuario' => 'id_usuario']],
+            [['id_aspirante'], 'exist', 'skipOnError' => true, 'targetClass' => Aspirante::className(), 'targetAttribute' => ['id_aspirante' => 'id_usuario']],
             [['id_vacante'], 'exist', 'skipOnError' => true, 'targetClass' => Vacante::className(), 'targetAttribute' => ['id_vacante' => 'id']],
         ];
     }
@@ -46,7 +48,8 @@ class VacanteAspirante extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_usuario' => Yii::t('app', 'Id Usuario'),
+            'id' => Yii::t('app', 'ID'),
+            'id_aspirante' => Yii::t('app', 'Id Aspirante'),
             'id_vacante' => Yii::t('app', 'Id Vacante'),
             'estado' => Yii::t('app', 'Estado'),
             'fecha_cambio_estado' => Yii::t('app', 'Fecha Cambio Estado'),
@@ -56,9 +59,17 @@ class VacanteAspirante extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdUsuario()
+    public function getCitas()
     {
-        return $this->hasOne(Aspirante::className(), ['id_usuario' => 'id_usuario']);
+        return $this->hasMany(Cita::className(), ['id_va' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIdAspirante()
+    {
+        return $this->hasOne(Aspirante::className(), ['id_usuario' => 'id_aspirante']);
     }
 
     /**

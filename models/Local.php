@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "local".
  *
  * @property integer $id
- * @property integer $id_usuario
+ * @property integer $id_empresa
  * @property string $calle
  * @property integer $numero
  * @property string $colonia
@@ -19,7 +19,7 @@ use Yii;
  * @property integer $activo
  *
  * @property Cita[] $citas
- * @property Empresa $idUsuario
+ * @property Empresa $idEmpresa
  * @property Vacante[] $vacantes
  */
 class Local extends \yii\db\ActiveRecord
@@ -38,10 +38,10 @@ class Local extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_usuario', 'calle', 'numero', 'colonia', 'codigo_postal', 'pais', 'estado', 'ciudad', 'activo'], 'required'],
-            [['id_usuario', 'numero', 'codigo_postal', 'activo'], 'integer'],
+            [['id_empresa', 'calle', 'numero', 'colonia', 'codigo_postal', 'pais', 'estado', 'ciudad', 'activo'], 'required'],
+            [['id_empresa', 'numero', 'codigo_postal', 'activo'], 'integer'],
             [['calle', 'colonia', 'pais', 'estado', 'ciudad'], 'string', 'max' => 100],
-            [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_usuario' => 'id_usuario']],
+            [['id_empresa'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_empresa' => 'id_usuario']],
         ];
     }
 
@@ -52,7 +52,7 @@ class Local extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'id_usuario' => Yii::t('app', 'Id Usuario'),
+            'id_empresa' => Yii::t('app', 'Id Empresa'),
             'calle' => Yii::t('app', 'Calle'),
             'numero' => Yii::t('app', 'Numero'),
             'colonia' => Yii::t('app', 'Colonia'),
@@ -75,9 +75,9 @@ class Local extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdUsuario()
+    public function getIdEmpresa()
     {
-        return $this->hasOne(Empresa::className(), ['id_usuario' => 'id_usuario']);
+        return $this->hasOne(Empresa::className(), ['id_usuario' => 'id_empresa']);
     }
 
     /**

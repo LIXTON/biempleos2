@@ -29,7 +29,15 @@ class VacanteController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['create', 'update'],
+                        'actions' => ['create'],
+                        'roles' => ['empresa'],
+                        'matchCallback' => function ($rule, $action) {
+                            return false;
+                        }
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
                         'roles' => ['empresa'],
                     ],
                     [
