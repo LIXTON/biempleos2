@@ -9,6 +9,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+// se agrego access control
+use yii\filters\AccessControl;
+// se agrego AccessRule
+use app\components\AccessRule;
+
 /**
  * SolicitudController implements the CRUD actions for Solicitud model.
  */
@@ -24,7 +29,15 @@ class SolicitudController extends Controller
                 'class' => AccessControl::className(),
                 // Se crea un nuevo AccessRule para lidiar con los roles //
                 'ruleConfig' => [
-                    'class' => app\components\AccessRule::className(),
+                    /* 
+                        existe un error que no encuentra app\components\AccessRule::className()
+                        se modifico de la siguiente manera:
+                    */
+                    'class' => AccessRule::className(),
+                    /*  
+                        Sigue el error:
+                            Getting unknown property: app\models\User::role
+                    */
                 ],
                 'rules' => [
                     [

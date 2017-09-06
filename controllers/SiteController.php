@@ -39,6 +39,13 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['?'],
                     ],
+                    // se agrego el codigo de las rules, no funciona hasta que no tenga el custom rule que se creo
+                    // pd. el custom rule que se creo tiene bug, mayor referencia ver documento SolicitudController.php
+                    [
+                        'allow' => true,
+                        'actions' => ['movilmenu'],
+                        'roles' => ['aspirante'],
+                    ],
                     [
                         'actions' => ['logout'],
                         'allow' => true,
