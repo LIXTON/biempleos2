@@ -9,6 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use app\models\EmpresaPaquete;
+use app\widgets\Alert;
+
 /**
  * VacanteController implements the CRUD actions for Vacante model.
  */
@@ -29,15 +32,7 @@ class VacanteController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['create'],
-                        'roles' => ['empresa'],
-                        'matchCallback' => function ($rule, $action) {
-                            return false;
-                        }
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['update'],
+                        'actions' => ['create', 'update'],
                         'roles' => ['empresa'],
                     ],
                     [
@@ -93,14 +88,36 @@ class VacanteController extends Controller
     public function actionCreate()
     {
         $model = new Vacante();
+        $empresaPaquete = EmpresaPaquete::findAll(['id_empresa' => Yii::$app->user->id]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'id_usuario' => $model->id_usuario, 'id_local' => $model->id_local]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            $empresaPaquete = EmpresaPaquete::findOne(['id' => Yii::$app->request->post('id_paquete'), 'id_empresa' => Yii::$app->user->id]);
+            if ($empresaPaquete !== null) {
+                $isAvaliable = ($empresaPaquete->no_vacante > 0 || $empresaPaquete->no_vacante == -1) && $empresaPaquete->fecha_expiracion < date("Y-m-d");
+                
+                if ($isAvaliable) {
+                    if ($empresaPaquete->no_vacante > 0) {
+                        $empresaPaquete->no_vacante -= 1;
+                        $empresaPaquete->save();
+                    }
+                    
+                    if ($model->save()) {
+                        return $this->redirect(['view', 'id' => $model->id, 'id_usuario' => $model->id_usuario, 'id_local' => $model->id_local]);
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'El tiempo o cantidad de vacantes que puedes manejar llego a su limite.<br>Compra algun paquete para que puedas seguir trabajando');
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'Ocurrio un error y el sistema no puede procesar la acción.<br>Intentalo más tarde.');
+            }
+            
+            $this->actionIndex();
         }
+        
+        return $this->render('create', [
+            'model' => $model,
+            'empresaPaquete' => $empresaPaquete,
+        ]);
     }
 
     /**
@@ -114,6 +131,11 @@ class VacanteController extends Controller
     public function actionUpdate($id, $id_usuario, $id_local)
     {
         $model = $this->findModel($id, $id_usuario, $id_local);
+        if ($model->fecha_publicacion !== null || $model->fecha_finalizacion !== null) {
+            Yii::$app->session->setFlash('error', 'La vacante ya no puede ser editada');
+            
+            return $this->redirect(['view', 'id' => $model->id, 'id_usuario' => $model->id_usuario, 'id_local' => $model->id_local]);
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id, 'id_usuario' => $model->id_usuario, 'id_local' => $model->id_local]);

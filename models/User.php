@@ -16,6 +16,9 @@ use yii\web\IdentityInterface;
  * @property string $contrasena_reset_token
  * @property string $auth_key
  * @property string $contrasena write-only password
+ * 
+ * @property Aspirante $aspirante
+ * @property Empresa $empresa
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -177,5 +180,21 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->contrasena_reset_token = null;
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAspirante()
+    {
+        return $this->hasOne(Aspirante::className(), ['id_usuario' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEmpresa()
+    {
+        return $this->hasOne(Empresa::className(), ['id_usuario' => 'id']);
     }
 }

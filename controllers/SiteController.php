@@ -220,7 +220,7 @@ class SiteController extends Controller
                     $empresaPaquete = new EmpresaPaquete();
                     $empresaPaquete->id_empresa = $user->id;
                     $empresaPaquete->id_paquete = Paquete::findOne(['precio' => 0])->id;
-                    $empresaPaquete->fecha_expiracion = date('Y-m-d H:i:s', strtotime("+1 month"));
+                    $empresaPaquete->fecha_expiracion = date('Y-m-d', strtotime("+1 month"));//'Y-m-d H:i:s'
                 }
                 
                 if (Yii::$app->getUser()->login($user)) {
@@ -230,7 +230,7 @@ class SiteController extends Controller
         }
 
         return $this->render('signupw', [
-            'signup' => $usuario,
+            'signup' => $signup,
             'empresa' => $empresa,
         ]);
     }
