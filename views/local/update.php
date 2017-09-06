@@ -9,7 +9,7 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
     'modelClass' => 'Local',
 ]) . $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Locals'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id, 'id_usuario' => $model->id_usuario]];
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="local-update">

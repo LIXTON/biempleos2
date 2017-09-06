@@ -47,7 +47,6 @@ class Empresa extends \yii\db\ActiveRecord
         return [
             'id_usuario' => Yii::t('app', 'Id Usuario'),
             'nombre' => Yii::t('app', 'Nombre'),
-            'fecha_expiracion' => Yii::t('app', 'Fecha Expiracion'),
         ];
     }
 

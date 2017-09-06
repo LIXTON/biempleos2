@@ -8,6 +8,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+//  Las siguientes dos lineas son para el funcionamiento de los roles   //
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * CitaController implements the CRUD actions for Cita model.
@@ -33,12 +36,12 @@ class CitaController extends Controller
                         'roles' => ['@'],
                     ],
                     [
-                        'allow' => true,
-                        'actions' => ['create', 'update'],
-                        'roles' => ['empresa'],
+                        'allow' => true, 
+                        'actions' => ['create', 'update'], 
+                        'roles' => ['empresa'], 
                     ],
                 ],
-            ],
+            ], 
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -66,13 +69,13 @@ class CitaController extends Controller
     /**
      * Displays a single Cita model.
      * @param integer $id
-     * @param integer $id_usuario
+     * @param integer $id_empresa
      * @return mixed
      */
-    public function actionView($id, $id_usuario)
+    public function actionView($id, $id_empresa)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id, $id_usuario),
+            'model' => $this->findModel($id, $id_empresa),
         ]);
     }
 
@@ -86,7 +89,7 @@ class CitaController extends Controller
         $model = new Cita();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'id_usuario' => $model->id_usuario]);
+            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -98,15 +101,15 @@ class CitaController extends Controller
      * Updates an existing Cita model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
-     * @param integer $id_usuario
+     * @param integer $id_empresa
      * @return mixed
      */
-    public function actionUpdate($id, $id_usuario)
+    public function actionUpdate($id, $id_empresa)
     {
-        $model = $this->findModel($id, $id_usuario);
+        $model = $this->findModel($id, $id_empresa);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'id_usuario' => $model->id_usuario]);
+            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -118,13 +121,13 @@ class CitaController extends Controller
      * Deletes an existing Cita model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
-     * @param integer $id_usuario
+     * @param integer $id_empresa
      * @return mixed
      */
     /*  Posible reutilizacion con cambios o eliminacion
-    public function actionDelete($id, $id_usuario)
+    public function actionDelete($id, $id_empresa)
     {
-        $this->findModel($id, $id_usuario)->delete();
+        $this->findModel($id, $id_empresa)->delete();
 
         return $this->redirect(['index']);
     }*/
@@ -133,13 +136,13 @@ class CitaController extends Controller
      * Finds the Cita model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @param integer $id_usuario
+     * @param integer $id_empresa
      * @return Cita the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id, $id_usuario)
+    protected function findModel($id, $id_empresa)
     {
-        if (($model = Cita::findOne(['id' => $id, 'id_usuario' => $id_usuario])) !== null) {
+        if (($model = Cita::findOne(['id' => $id, 'id_empresa' => $id_empresa])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -30,7 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id_usuario',
             'nombre',
-            'fecha_expiracion',
         ],
     ]) ?>
 

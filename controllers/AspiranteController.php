@@ -8,6 +8,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+//  Las siguientes dos lineas son para el funcionamiento de los roles   //
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * AspiranteController implements the CRUD actions for Aspirante model.

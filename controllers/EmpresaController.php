@@ -8,6 +8,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+//  Las siguientes dos lineas son para el funcionamiento de los roles   //
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * EmpresaController implements the CRUD actions for Empresa model.
@@ -24,7 +27,7 @@ class EmpresaController extends Controller
                 'class' => AccessControl::className(),
                 // Se crea un nuevo AccessRule para lidiar con los roles //
                 'ruleConfig' => [
-                    'class' => app\components\AccessRule::className(),
+                    'class' => AccessRule::className(),
                 ],
                 'rules' => [
                     [

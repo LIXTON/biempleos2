@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'id_usuario',
+            'id_empresa',
             'id_local',
             'puesto',
             'sueldo',
@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'horario',
             // 'fecha_publicacion',
             // 'fecha_finalizacion',
+            // 'no_cita',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
