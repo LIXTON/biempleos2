@@ -91,8 +91,12 @@ class VacanteController extends Controller
     public function actionCreate()
     {
         $model = new Vacante();
+        $ep = EmpresaPaquete::findOne(Yii::$app->user->id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $this->isAvaliable($ep)) {
+            $ep->no_vacante -= 1;
+            $ep->save();
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa, 'id_local' => $model->id_local]);
         } else {
             return $this->render('create', [
@@ -153,5 +157,9 @@ class VacanteController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    protected function isAvaliable($ep) {
+        return $ep->fecha_expiracion > date('Y-m-d') && $ep->no_vacante > 0;
     }
 }

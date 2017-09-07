@@ -86,6 +86,18 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $this->layout = false;
+        
+        if(!Yii::$app->user->isGuest) {
+            switch(Yii::$app->user->identity->rol) {
+                case 'empresa':
+                    return $this->redirect(['//empresa/view', 'id' => Yii::$app->user->id]);
+                case 'aspirante':
+                    return $this->redirect(['//aspirante/view', 'id' => Yii::$app->user->id]);
+                case 'admin':
+                    return $this->redirect(['//paquete/index']);
+            }
+        }
+        
         return $this->render('index');
     }
 
