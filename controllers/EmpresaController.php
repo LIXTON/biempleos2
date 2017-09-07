@@ -50,6 +50,7 @@ class EmpresaController extends Controller
      * Lists all Empresa models.
      * @return mixed
      */
+    /*  Posible reutilizacion con cambios o eliminacion */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -69,7 +70,7 @@ class EmpresaController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'empresa' => $this->findModel($id),
         ]);
     }
 
@@ -80,13 +81,13 @@ class EmpresaController extends Controller
      */
     /*public function actionCreate()
     {
-        $model = new Empresa();
+        $empresa = new Empresa();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_usuario]);
+        if ($empresa->load(Yii::$app->request->post()) && $empresa->save()) {
+            return $this->redirect(['view', 'id' => $empresa->id_usuario]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                'empresa' => $empresa,
             ]);
         }
     }*/
@@ -97,18 +98,35 @@ class EmpresaController extends Controller
      * @param integer $id
      * @return mixed
      */
+    /*  Posible reutilizacion con cambios o eliminacion
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $empresa = $this->findModel($id);
+        
+        $chgPassword = new \app\models\chgPasswordForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_usuario]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if(Yii::$app->request->isAjax && $chgPassword->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            return \yii\widgets\ActiveForm::validate($chgPassword);
         }
-    }
+
+        if ($chgPassword->load(Yii::$app->request->post()) && $chgPassword->validate()) {
+            //$user = User::findByCorreo(Yii::$app->user->identity->correo);
+            //$user->setPassword($chgPassword->contrasena);
+            
+            Yii::$app->user->identity->setPassword($chgPassword->new_contrasena);
+            if(Yii::$app->user->identity->save())
+                Yii::$app->session->setFlash('success', 'Tu contraseña se ha cambiado exitosamente');
+            else
+                Yii::$app->session->setFlash('error', 'Ocurrio un problema al cambiar tu contraseña.<br>Intentalo mas tarde.');
+            return $this->redirect(['view', 'id' => $empresa->id_usuario]);
+        }
+        
+        return $this->render('update', [
+            'empresa' => $empresa,
+            'chgPassword' => $chgPassword,
+        ]);
+    }*/
 
     /**
      * Deletes an existing Empresa model.
@@ -132,8 +150,8 @@ class EmpresaController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Empresa::findOne($id)) !== null) {
-            return $model;
+        if (($empresa = Empresa::findOne($id)) !== null) {
+            return $empresa;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

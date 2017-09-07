@@ -32,7 +32,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signupw', 'signupm'],
+                'only' => ['logout', 'signupw', 'signupm', 'chgpassword'],
                 'rules' => [
                     [
                         'actions' => ['signupw', 'signupm'],
@@ -47,7 +47,7 @@ class SiteController extends Controller
                         'roles' => ['aspirante'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'chgpassword'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -320,6 +320,43 @@ class SiteController extends Controller
 
         return $this->render('resetPassword', [
             'model' => $model,
+        ]);
+    }
+    
+    /**
+     * Change password. Realiza el cambio de la contraseña del usuario
+     * Lo redirige a una pagina en especifico dependiendo del rol
+     *
+     * @param string $token
+     * @return mixed
+     * @throws BadRequestHttpException
+     */
+    public function actionChgpassword()
+    {
+        $chgPassword = new \app\models\chgPasswordForm();
+
+        if(Yii::$app->request->isAjax && $chgPassword->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            return \yii\widgets\ActiveForm::validate($chgPassword);
+        }
+
+        if ($chgPassword->load(Yii::$app->request->post()) && $chgPassword->validate()) {
+            Yii::$app->user->identity->setPassword($chgPassword->new_contrasena);
+            if(Yii::$app->user->identity->save())
+                Yii::$app->session->setFlash('success', 'Tu contraseña se ha cambiado exitosamente');
+            else
+                Yii::$app->session->setFlash('error', 'Ocurrio un problema al cambiar tu contraseña.<br>Intentalo mas tarde.');
+            
+            switch(Yii::$app->user->identity->rol) {
+                case "empresa":
+                    return $this->redirect(['//empresa/view', 'id' => Yii::$app->user->id]);
+                case "aspirante":
+                    return $this->redirect(['//aspirante/view', 'id' => Yii::$app->user->id]);
+            }
+        }
+        
+        return $this->render('chgPassword', [
+            'chgPassword' => $chgPassword,
         ]);
     }
 }

@@ -6,14 +6,10 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Empresa */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Empresa',
-]) . $empresa->id_usuario;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Empresas'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $empresa->id_usuario, 'url' => ['view', 'id' => $empresa->id_usuario]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->title = 'Cambiar contraseña';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="empresa-update">
+<div class="chgpassword-form">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

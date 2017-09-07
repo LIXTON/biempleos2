@@ -15,6 +15,7 @@ use yii\web\IdentityInterface;
  * @property string $contrasena_hash
  * @property string $contrasena_reset_token
  * @property string $auth_key
+ * @property string $rol
  * @property string $contrasena write-only password
  * 
  * @property Aspirante $aspirante

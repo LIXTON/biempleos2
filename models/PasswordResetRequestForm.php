@@ -23,7 +23,7 @@ class PasswordResetRequestForm extends Model
             ['correo', 'required'],
             ['correo', 'email'],
             ['correo', 'exist',
-                'targetClass' => '\models\User',
+                'targetClass' => 'app\models\User',
                 'message' => 'There is no user with this email address.'
             ],
         ];
