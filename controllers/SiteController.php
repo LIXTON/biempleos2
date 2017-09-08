@@ -113,7 +113,7 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if(Yii::$app->request->post('gcm') !== null) {
+        if(!empty(Yii::$app->request->post('gcm'))) {
             if ($model->load(Yii::$app->request->post()) && $model->login()) {
                 // Obteniendo al aspirante para asignarle la GCM Key
                 $aspirante = Aspirante::findOne(Yii::$app->user->id);

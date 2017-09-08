@@ -34,10 +34,6 @@ class SolicitudController extends Controller
                         se modifico de la siguiente manera:
                     */
                     'class' => AccessRule::className(),
-                    /*  
-                        Sigue el error:
-                            Getting unknown property: app\models\User::role
-                    */
                 ],
                 'rules' => [
                     [

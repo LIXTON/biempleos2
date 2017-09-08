@@ -27,7 +27,7 @@ class LocalController extends Controller
                 'class' => AccessControl::className(),
                 // Se crea un nuevo AccessRule para lidiar con los roles //
                 'ruleConfig' => [
-                    'class' => app\components\AccessRule::className(),
+                    'class' => AccessRule::className(),
                 ],
                 'rules' => [
                     [
