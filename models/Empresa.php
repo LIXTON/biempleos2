@@ -4,7 +4,7 @@ namespace app\models;
 
 use Yii;
 //  Se utiliza para indicar quien creo o edito algo
-//use yii\behaviors\BlameableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "empresa".
@@ -31,15 +31,17 @@ class Empresa extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    /*  Posible uso en el futuro
+    /*  Posible uso en el futuro */
     public function behaviors()
     {
         return [
-            'class' => BlameableBehavior::className(),
-            'createdByAttribute' => 'id_usuario',
-            'updatedByAttribute' => false,
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'id_usuario',
+                'updatedByAttribute' => false,
+            ]
         ];
-    }*/
+    }//*/
 
     /**
      * @inheritdoc
@@ -47,10 +49,11 @@ class Empresa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_usuario', 'nombre'], 'required'],
-            [['id_usuario'], 'integer'],
+            ['nombre', 'required'],
+            //[['id_usuario', 'nombre'], 'required'],
+            //[['id_usuario'], 'integer'],
             [['nombre'], 'string', 'max' => 100],
-            [['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_usuario' => 'id']],
+            //[['id_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_usuario' => 'id']],
         ];
     }
 

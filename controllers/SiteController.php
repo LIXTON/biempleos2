@@ -233,20 +233,17 @@ class SiteController extends Controller
         $signup = new SignupForm();
         // Se crea una empresa //
         $empresa = new Empresa();
-        if ($signup->load(Yii::$app->request->post()) && $empresa->load(Yii::$app->request->post())) {
+        if ($signup->load(Yii::$app->request->post())) {
             if ($user = $signup->signup('empresa')) {
-                // Se registra la relacion de empresa y usuario //
-                $empresa->id_usuario = $user->id;
-                // Se registra empresa en la bd //
-                if ($empresa->save()) {
-                    // Se crea el paquete gratuito de 1 mes a la empresa //
-                    $empresaPaquete = new EmpresaPaquete();
-                    $empresaPaquete->id_empresa = $user->id;
-                    $empresaPaquete->id_paquete = Paquete::findOne(['precio' => 0])->id;
-                    $empresaPaquete->fecha_expiracion = date('Y-m-d', strtotime("+1 month"));//'Y-m-d H:i:s'
-                }
                 
                 if (Yii::$app->getUser()->login($user)) {
+                    if ($empresa->load(Yii::$app->request->post()) && $empresa->save()) {
+                        // Se crea el paquete gratuito de 1 mes a la empresa //
+                        $empresaPaquete = new EmpresaPaquete();
+                        $empresaPaquete->id_empresa = $user->id;
+                        $empresaPaquete->id_paquete = Paquete::findOne(['precio' => 0])->id;
+                        $empresaPaquete->fecha_expiracion = date('Y-m-d', strtotime("+1 month"));//'Y-m-d H:i:s'
+                    }
                     return $this->goHome();
                 }
             }

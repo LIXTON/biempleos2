@@ -53,7 +53,7 @@ class LocalController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Local::find()->where(['id_empresa' => Yii::$app->user->id]),
+            'query' => Local::find(),//->where(['id_empresa' => Yii::$app->user->id]),
         ]);
 
         return $this->render('index', [

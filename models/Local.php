@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "local".
@@ -31,6 +32,20 @@ class Local extends \yii\db\ActiveRecord
     {
         return 'local';
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'id_empresa',
+                'updatedByAttribute' => false,
+            ]
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -38,10 +53,10 @@ class Local extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_empresa', 'calle', 'numero', 'colonia', 'codigo_postal', 'pais', 'estado', 'ciudad', 'activo'], 'required'],
-            [['id_empresa', 'numero', 'codigo_postal', 'activo'], 'integer'],
+            [[/*'id_empresa', */'calle', 'numero', 'colonia', 'codigo_postal', 'pais', 'estado', 'ciudad', 'activo'], 'required'],
+            [[/*'id_empresa', */'numero', 'codigo_postal', 'activo'], 'integer'],
             [['calle', 'colonia', 'pais', 'estado', 'ciudad'], 'string', 'max' => 100],
-            [['id_empresa'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_empresa' => 'id_usuario']],
+            //[['id_empresa'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_empresa' => 'id_usuario']],
         ];
     }
 
