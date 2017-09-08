@@ -34,9 +34,6 @@ class AspiranteController extends Controller
                         'allow' => true,
                         'actions' => ['index', 'view', 'update'],
                         'roles' => ['aspirante'],
-                        'matchCallback' => function($rule, $action) {
-                            return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
-                        }
                     ],
                 ],
             ],

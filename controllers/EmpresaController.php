@@ -34,9 +34,9 @@ class EmpresaController extends Controller
                         'allow' => true,
                         'actions' => ['index', 'view'],
                         'roles' => ['empresa'],
-                        'matchCallback' => function($rule, $action) {
+                        /*'matchCallback' => function($rule, $action) {
                             return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
-                        }
+                        }*/
                     ],
                 ],
             ],

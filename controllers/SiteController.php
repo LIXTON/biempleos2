@@ -92,7 +92,11 @@ class SiteController extends Controller
                 case 'empresa':
                     return $this->redirect(['//empresa/view', 'id' => Yii::$app->user->id]);
                 case 'aspirante':
-                    return $this->redirect(['//aspirante/view', 'id' => Yii::$app->user->id]);
+                    $gcm = Yii::$app->user->identity->aspirante->gcm;
+                    if(empty($gcm))
+                        return $this->redirect(['//aspirante/view', 'id' => Yii::$app->user->id]);
+                    else
+                        return $this->actionMovilmenu();
                 case 'admin':
                     return $this->redirect(['//paquete/index']);
             }
