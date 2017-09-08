@@ -45,15 +45,4 @@ class ChgPasswordForm extends Model
             }
         }
     }
-    
-    /*public function clientValidateAttribute($model, $attribute, $view)
-    {
-        //$statuses = json_encode(Status::find()->select('id')->asArray()->column());
-        //$message = json_encode($this->message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        return <<<JS
-if ($.inArray(value) === "123123") {
-    messages.push("yeah");
-}
-JS;
-    }*/
 }

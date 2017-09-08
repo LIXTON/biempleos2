@@ -34,9 +34,6 @@ class LocalController extends Controller
                         'allow' => true,
                         'actions' => ['index', 'view', 'create', 'update', 'delete'],
                         'roles' => ['empresa'],
-                        'matchCallback' => function($rule, $action) {
-                            return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
-                        }
                     ],
                 ],
             ],
@@ -56,7 +53,7 @@ class LocalController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Local::find(),
+            'query' => Local::find()->where(['id_empresa' => Yii::$app->user->id]),
         ]);
 
         return $this->render('index', [
@@ -70,10 +67,10 @@ class LocalController extends Controller
      * @param integer $id_empresa
      * @return mixed
      */
-    public function actionView($id, $id_empresa)
+    public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id, $id_empresa),
+            'model' => $this->findModel($id, Yii::$app->user->id),
         ]);
     }
 
@@ -87,7 +84,7 @@ class LocalController extends Controller
         $model = new Local();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -102,12 +99,12 @@ class LocalController extends Controller
      * @param integer $id_empresa
      * @return mixed
      */
-    public function actionUpdate($id, $id_empresa)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($id, $id_empresa);
+        $model = $this->findModel($id, Yii::$app->user->id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -122,9 +119,9 @@ class LocalController extends Controller
      * @param integer $id_empresa
      * @return mixed
      */
-    public function actionDelete($id, $id_empresa)
+    public function actionDelete($id)
     {
-        $this->findModel($id, $id_empresa)->delete();
+        $this->findModel($id, Yii::$app->user->id)->delete();
 
         return $this->redirect(['index']);
     }

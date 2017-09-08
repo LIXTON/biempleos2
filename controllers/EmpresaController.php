@@ -32,7 +32,7 @@ class EmpresaController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view', 'update'],
+                        'actions' => ['index', 'view'],
                         'roles' => ['empresa'],
                         'matchCallback' => function($rule, $action) {
                             return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
@@ -101,7 +101,6 @@ class EmpresaController extends Controller
      * @param integer $id
      * @return mixed
     /*  Posible reutilizacion con cambios o eliminacion
-     */
     public function actionUpdate($id)
     {
         $empresa = $this->findModel($id);
@@ -113,7 +112,7 @@ class EmpresaController extends Controller
         return $this->render('update', [
             'empresa' => $empresa,
         ]);
-    }//*/
+    }*/
 
     /**
      * Deletes an existing Empresa model.
