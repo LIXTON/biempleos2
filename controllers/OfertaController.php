@@ -34,6 +34,9 @@ class OfertaController extends Controller
                         'allow' => true,
                         'actions' => ['index', 'view', 'create', 'update', 'delete'],
                         'roles' => ['admin'],
+                        'matchCallback' => function($rule, $action) {
+                            return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
+                        }
                     ],
                 ],
             ],

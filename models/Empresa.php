@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+//  Se utiliza para indicar quien creo o edito algo
+//use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "empresa".
@@ -25,6 +27,19 @@ class Empresa extends \yii\db\ActiveRecord
     {
         return 'empresa';
     }
+    
+    /**
+     * @inheritdoc
+     */
+    /*  Posible uso en el futuro
+    public function behaviors()
+    {
+        return [
+            'class' => BlameableBehavior::className(),
+            'createdByAttribute' => 'id_usuario',
+            'updatedByAttribute' => false,
+        ];
+    }*/
 
     /**
      * @inheritdoc

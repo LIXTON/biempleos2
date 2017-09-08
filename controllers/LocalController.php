@@ -34,6 +34,9 @@ class LocalController extends Controller
                         'allow' => true,
                         'actions' => ['index', 'view', 'create', 'update', 'delete'],
                         'roles' => ['empresa'],
+                        'matchCallback' => function($rule, $action) {
+                            return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
+                        }
                     ],
                 ],
             ],

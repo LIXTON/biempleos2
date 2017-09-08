@@ -34,6 +34,9 @@ class EmpresaController extends Controller
                         'allow' => true,
                         'actions' => ['index', 'view', 'update'],
                         'roles' => ['empresa'],
+                        'matchCallback' => function($rule, $action) {
+                            return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
+                        }
                     ],
                 ],
             ],
@@ -50,7 +53,7 @@ class EmpresaController extends Controller
      * Lists all Empresa models.
      * @return mixed
      */
-    /*  Posible reutilizacion con cambios o eliminacion */
+    /*  Posible reutilizacion con cambios o eliminacion*/
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -97,36 +100,20 @@ class EmpresaController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
-     */
     /*  Posible reutilizacion con cambios o eliminacion
+     */
     public function actionUpdate($id)
     {
         $empresa = $this->findModel($id);
         
-        $chgPassword = new \app\models\chgPasswordForm();
-
-        if(Yii::$app->request->isAjax && $chgPassword->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return \yii\widgets\ActiveForm::validate($chgPassword);
-        }
-
-        if ($chgPassword->load(Yii::$app->request->post()) && $chgPassword->validate()) {
-            //$user = User::findByCorreo(Yii::$app->user->identity->correo);
-            //$user->setPassword($chgPassword->contrasena);
-            
-            Yii::$app->user->identity->setPassword($chgPassword->new_contrasena);
-            if(Yii::$app->user->identity->save())
-                Yii::$app->session->setFlash('success', 'Tu contraseña se ha cambiado exitosamente');
-            else
-                Yii::$app->session->setFlash('error', 'Ocurrio un problema al cambiar tu contraseña.<br>Intentalo mas tarde.');
+        if ($empresa->load(Yii::$app->request->post()) && $empresa->save()) {
             return $this->redirect(['view', 'id' => $empresa->id_usuario]);
         }
         
         return $this->render('update', [
             'empresa' => $empresa,
-            'chgPassword' => $chgPassword,
         ]);
-    }*/
+    }//*/
 
     /**
      * Deletes an existing Empresa model.

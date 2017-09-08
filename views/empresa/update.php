@@ -17,18 +17,8 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php $form = ActiveForm::begin(); ?>
-    
-    <?= $form->field($chgPassword, 'contrasena', ['enableAjaxValidation' => true])->passwordInput() ?>
-
-    <?= $form->field($chgPassword, 'new_contrasena')->passwordInput() ?>
-
-    <?= $form->field($chgPassword, 'recontrasena')->passwordInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Actualizar'), ['class' => 'btn btn-primary']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
+    <?= $this->render('_form', [
+        'empresa' => $empresa,
+    ]) ?>
 
 </div>

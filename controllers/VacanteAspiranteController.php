@@ -34,11 +34,17 @@ class VacanteAspiranteController extends Controller
                         'allow' => true,
                         'actions' => ['create', 'update'],
                         'roles' => ['empresa'],
+                        'matchCallback' => function($rule, $action) {
+                            return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
+                        }
                     ],
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
                         'roles' => ['@'],
+                        'matchCallback' => function($rule, $action) {
+                            return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
+                        }
                     ],
                 ],
             ],
