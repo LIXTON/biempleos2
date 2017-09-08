@@ -12,7 +12,10 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id_aspirante')->textInput() ?>
+    <?php 
+        // campo no necesario
+        // $form->field($model, 'id_aspirante')->textInput() 
+    ?>
 
     <?= $form->field($model, 'foto')->textarea(['rows' => 6]) ?>
 

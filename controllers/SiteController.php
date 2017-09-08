@@ -277,7 +277,7 @@ class SiteController extends Controller
                 // se guardan los cambios //
                 $aspirante->save();
 
-                return $this->actionLogin();
+                return $this->redirect(['site/login']);
             }
         }
 

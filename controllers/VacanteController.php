@@ -69,6 +69,22 @@ class VacanteController extends Controller
         ]);
     }
 
+
+    /**
+     * Action clonada para no modificar el index y no afectar otro tipo de funciones empresariales
+     * @return mixed
+     */
+    public function actionVervacantes()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Vacante::find(),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single Vacante model.
      * @param integer $id

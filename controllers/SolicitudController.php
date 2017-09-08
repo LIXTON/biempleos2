@@ -96,7 +96,7 @@ class SolicitudController extends Controller
     public function actionCreate()
     {
         $model = new Solicitud();
-        $model->id_usuario = Yii::$app->user->id;
+        $model->id_aspirante = Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_usuario]);
         } else {
@@ -121,7 +121,7 @@ class SolicitudController extends Controller
             return $this->actionCreate();
         }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_usuario]);
+            return $this->redirect(['view', 'id' => $model->id_aspirante]);
         } else {
             return $this->render('update', [
                 'model' => $model,
