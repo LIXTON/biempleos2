@@ -73,7 +73,7 @@ class EmpresaController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'empresa' => $this->findModel($id),
+            'empresa' => $this->findModel(),
         ]);
     }
 
@@ -134,9 +134,9 @@ class EmpresaController extends Controller
      * @return Empresa the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel()
     {
-        if (($empresa = Empresa::findOne($id)) !== null) {
+        if (($empresa = Empresa::findOne(Yii::$app->user->id)) !== null) {
             return $empresa;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+//  Se utiliza para indicar quien creo o edito algo
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "vacante".
@@ -18,6 +20,7 @@ use Yii;
  * @property string $fecha_publicacion
  * @property string $fecha_finalizacion
  * @property integer $no_cita
+ * @property string $fecha_expiracion
  *
  * @property Empresa $idEmpresa
  * @property Local $idLocal
@@ -36,16 +39,29 @@ class Vacante extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'id_empresa',
+                'updatedByAttribute' => false,
+            ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['id_empresa', 'id_local', 'puesto', 'requisito', 'horario', 'no_cita'], 'required'],
-            [['id_empresa', 'id_local', 'no_cita'], 'integer'],
+            [['id_local', 'puesto', 'requisito', 'horario', 'no_cita', 'fecha_expiracion'], 'required'],
+            [['id_local', 'no_cita'], 'integer'],
             [['ofrece', 'requisito'], 'string'],
-            [['fecha_publicacion', 'fecha_finalizacion'], 'safe'],
+            [['fecha_publicacion', 'fecha_finalizacion', 'fecha_expiracion'], 'safe'],
             [['puesto'], 'string', 'max' => 255],
             [['sueldo', 'horario'], 'string', 'max' => 100],
-            [['id_empresa'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_empresa' => 'id_usuario']],
             [['id_local'], 'exist', 'skipOnError' => true, 'targetClass' => Local::className(), 'targetAttribute' => ['id_local' => 'id']],
         ];
     }
@@ -67,6 +83,7 @@ class Vacante extends \yii\db\ActiveRecord
             'fecha_publicacion' => Yii::t('app', 'Fecha Publicacion'),
             'fecha_finalizacion' => Yii::t('app', 'Fecha Finalizacion'),
             'no_cita' => Yii::t('app', 'No Cita'),
+            'fecha_expiracion' => Yii::t('app', 'Fecha Expiracion'),
         ];
     }
 

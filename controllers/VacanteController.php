@@ -35,12 +35,17 @@ class VacanteController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['create', 'update'],
+                        'actions' => ['index-empresa', 'create', 'update'],
                         'roles' => ['empresa'],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index-aspirante'],
+                        'roles' => ['aspirante'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -48,7 +53,7 @@ class VacanteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    //'delete' => ['POST'],
                 ],
             ],
         ];
@@ -56,9 +61,10 @@ class VacanteController extends Controller
 
     /**
      * Lists all Vacante models.
+     * Solo se visualiza para aspirantes
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndexAspirante()
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Vacante::find(),
@@ -74,10 +80,10 @@ class VacanteController extends Controller
      * Action clonada para no modificar el index y no afectar otro tipo de funciones empresariales
      * @return mixed
      */
-    public function actionVervacantes()
+    public function actionIndexEmpresa()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Vacante::find(),
+            'query' => Vacante::find()->where(['id_empresa' => Yii::$app->user->id]),
         ]);
 
         return $this->render('index', [
@@ -94,8 +100,22 @@ class VacanteController extends Controller
      */
     public function actionView($id, $id_empresa, $id_local)
     {
+        //  Restringe la vista de vacantes a empresas
+        $id_empresa = Yii::$app->user->identity->rol == 'empresa' ? Yii::$app->user->id:$id_empresa;
+        $vacante = $this->findModel($id, $id_empresa, $id_local);
+        
+        if($vacante === null) {
+            Yii::$app->session->setFlash('error', 'No tienes acceso a la vacante');
+            switch(Yii::$app->user->identity->rol) {
+                case "aspirante":
+                    return $this->redirect(['index-aspirante']);
+                case "empresa":
+                    return $this->redirect(['index-empresa']);
+            }
+        }
+        
         return $this->render('view', [
-            'model' => $this->findModel($id, $id_empresa, $id_local),
+            'model' => $vacante,
         ]);
     }
 
@@ -107,18 +127,24 @@ class VacanteController extends Controller
     public function actionCreate()
     {
         $model = new Vacante();
-        $ep = EmpresaPaquete::findOne(Yii::$app->user->id);
+        $ep = EmpresaPaquete::findAll(['id_empresa' => Yii::$app->user->id]);
+        $local = Local::findAll(['id_empresa' => Yii::$app->user->id]);
 
-        if ($model->load(Yii::$app->request->post()) && $this->isAvaliable($ep)) {
-            $ep->no_vacante -= 1;
-            $ep->save();
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa, 'id_local' => $model->id_local]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post()) && $ep->load(Yii::$app->request->post())) {
+            if($ep->fecha_expiracion > date('Y-m-d') && $ep->no_vacante > 0) {
+                $ep->no_vacante -= 1;
+                $ep->save();
+                $model->fecha_expiracion = $ep->fecha_expiracion;
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id, 'id_local' => $model->id_local]);
+            }
         }
+        
+        return $this->render('create', [
+            'model' => $model,
+            'ep' => $ep,
+            'local' => $local,
+        ]);
     }
 
     /**
@@ -129,17 +155,29 @@ class VacanteController extends Controller
      * @param integer $id_local
      * @return mixed
      */
-    public function actionUpdate($id, $id_empresa, $id_local)
+    public function actionUpdate($id, $id_local)
     {
-        $model = $this->findModel($id, $id_empresa, $id_local);
+        $model = $this->findModel($id, Yii::$app->user->id, $id_local);
+        $msgError = null;
+        
+        if ($isUnavaliable = $model->fecha_expiracion < date('Y-m-d'))
+            $msgError = "La vacante no puede ser editada debido a que expiro el paquete.";
+        else if ($isUnavaliable = !empty($model->fecha_finalizacion))
+            $msgError = "La vacante no puede ser editada debido a que la contratacion finalizo.";
+        else if ($isUnavaliable = !empty($model->fecha_publicacion))
+            $msgError = "La vacante no puede ser editada debido a que fue publicada.";
+        
+        if($isUnavaliable)
+            return $this->redirect(['index-empresa']);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa, 'id_local' => $model->id_local]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }
+        
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -150,12 +188,13 @@ class VacanteController extends Controller
      * @param integer $id_local
      * @return mixed
      */
-    public function actionDelete($id, $id_empresa, $id_local)
+    /*  Posible reutilizacion con cambios o eliminacion
+    public function actionDelete($id, $id_local)
     {
-        $this->findModel($id, $id_empresa, $id_local)->delete();
+        $this->findModel($id, Yii::$app->user->id, $id_local)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the Vacante model based on its primary key value.
@@ -173,9 +212,5 @@ class VacanteController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-    
-    protected function isAvaliable($ep) {
-        return $ep->fecha_expiracion > date('Y-m-d') && $ep->no_vacante > 0;
     }
 }

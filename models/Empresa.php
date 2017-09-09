@@ -31,7 +31,6 @@ class Empresa extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    /*  Posible uso en el futuro */
     public function behaviors()
     {
         return [
@@ -41,7 +40,7 @@ class Empresa extends \yii\db\ActiveRecord
                 'updatedByAttribute' => false,
             ]
         ];
-    }//*/
+    }
 
     /**
      * @inheritdoc

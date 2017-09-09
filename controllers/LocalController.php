@@ -53,7 +53,7 @@ class LocalController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Local::find(),//->where(['id_empresa' => Yii::$app->user->id]),
+            'query' => Local::find()->where(['id_empresa' => Yii::$app->user->id]),
         ]);
 
         return $this->render('index', [
@@ -70,7 +70,7 @@ class LocalController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id, Yii::$app->user->id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -101,7 +101,7 @@ class LocalController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id, Yii::$app->user->id);
+        $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -121,7 +121,7 @@ class LocalController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id, Yii::$app->user->id)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
@@ -134,9 +134,9 @@ class LocalController extends Controller
      * @return Local the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id, $id_empresa)
+    protected function findModel($id)
     {
-        if (($model = Local::findOne(['id' => $id, 'id_empresa' => $id_empresa])) !== null) {
+        if (($model = Local::findOne(['id' => $id, 'id_empresa' => Yii::$app->user->id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

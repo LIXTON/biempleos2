@@ -53,10 +53,9 @@ class Local extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[/*'id_empresa', */'calle', 'numero', 'colonia', 'codigo_postal', 'pais', 'estado', 'ciudad', 'activo'], 'required'],
-            [[/*'id_empresa', */'numero', 'codigo_postal', 'activo'], 'integer'],
+            [['calle', 'numero', 'colonia', 'codigo_postal', 'pais', 'estado', 'ciudad', 'activo'], 'required'],
+            [['numero', 'codigo_postal', 'activo'], 'integer'],
             [['calle', 'colonia', 'pais', 'estado', 'ciudad'], 'string', 'max' => 100],
-            //[['id_empresa'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_empresa' => 'id_usuario']],
         ];
     }
 
