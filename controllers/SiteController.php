@@ -85,8 +85,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $this->layout = false;
-        
         if(!Yii::$app->user->isGuest) {
             switch(Yii::$app->user->identity->rol) {
                 case 'empresa':
@@ -101,6 +99,8 @@ class SiteController extends Controller
                     return $this->redirect(['//paquete/index']);
             }
         }
+        
+        $this->layout = false;
         
         return $this->render('index');
     }

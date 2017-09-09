@@ -45,7 +45,7 @@ class VacanteAspiranteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    //'delete' => ['POST'],
                 ],
             ],
         ];
@@ -122,12 +122,13 @@ class VacanteAspiranteController extends Controller
      * @param integer $id
      * @return mixed
      */
+    /*  Posible reutilizacion con cambios o eliminacion
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the VacanteAspirante model based on its primary key value.

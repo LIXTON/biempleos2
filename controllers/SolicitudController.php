@@ -94,7 +94,7 @@ class SolicitudController extends Controller
         $model = new Solicitud();
         $model->id_aspirante = Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_usuario]);
+            return $this->redirect(['view', 'id' => $model->id_aspirante]);
         } else {
             return $this->render('create', [
                 'model' => $model,
