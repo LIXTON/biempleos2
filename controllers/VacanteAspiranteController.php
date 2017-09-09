@@ -32,8 +32,8 @@ class VacanteAspiranteController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['create', 'update'],
-                        'roles' => ['empresa'],
+                        'actions' => ['create'],
+                        'roles' => ['aspirante'],
                     ],
                     [
                         'allow' => true,
@@ -102,6 +102,7 @@ class VacanteAspiranteController extends Controller
      * @param integer $id
      * @return mixed
      */
+    /*  Posible reutilizacion con cambios o eliminacion
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -113,7 +114,7 @@ class VacanteAspiranteController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Deletes an existing VacanteAspirante model.
