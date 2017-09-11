@@ -3,21 +3,23 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Vacante */
+/* @var $vacante app\models\Vacante */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
+$this->title = Yii::t('app', 'Editar {modelClass}: ', [
     'modelClass' => 'Vacante',
-]) . $model->id;
+]) . $vacante->puesto;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Vacantes'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa, 'id_local' => $model->id_local]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->params['breadcrumbs'][] = ['label' => $vacante->puesto, 'url' => ['view', 'id' => $vacante->id, 'id_empresa' => $vacante->id_empresa, 'id_local' => $vacante->id_local]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Editar');
 ?>
 <div class="vacante-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
-        'model' => $model,
+        'vacante' => $vacante,
+        'local' => $local,
+        'ep' => $ep,
     ]) ?>
 
 </div>

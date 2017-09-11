@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 //  Las siguientes dos lineas son para el funcionamiento de los roles   //
 use yii\filters\AccessControl;
 use app\components\AccessRule;
+//  Se agrego el modelo EmpresaPaquete para la visualizacion en view    //
+use app\models\EmpresaPaquete;
 
 /**
  * EmpresaController implements the CRUD actions for Empresa model.
@@ -32,7 +34,7 @@ class EmpresaController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view'],
+                        'actions' => ['view'],
                         'roles' => ['empresa'],
                         /*'matchCallback' => function($rule, $action) {
                             return !Yii::$app->request->get('id') || Yii::$app->request->get('id') == Yii::$app->user->id;
@@ -53,7 +55,7 @@ class EmpresaController extends Controller
      * Lists all Empresa models.
      * @return mixed
      */
-    /*  Posible reutilizacion con cambios o eliminacion*/
+    /*  Posible reutilizacion con cambios o eliminacion
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -63,17 +65,28 @@ class EmpresaController extends Controller
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
-    }
+    }*/
 
     /**
      * Displays a single Empresa model.
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView()
     {
+        //  Busca empresa
+        $empresa = $this->findModel();
+        //  Crea el dataProvider de empresa_paquete
+        $ep = new ActiveDataProvider([
+            'query' => EmpresaPaquete::find()->where(['id_empresa' => $empresa->id_usuario]),
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);
+        
         return $this->render('view', [
-            'empresa' => $this->findModel(),
+            'empresa' => $empresa,
+            'ep' => $ep,
         ]);
     }
 

@@ -88,7 +88,7 @@ class SiteController extends Controller
         if(!Yii::$app->user->isGuest) {
             switch(Yii::$app->user->identity->rol) {
                 case 'empresa':
-                    return $this->redirect(['//empresa/view', 'id' => Yii::$app->user->id]);
+                    return $this->redirect(['//empresa/view']);
                 case 'aspirante':
                     $gcm = Yii::$app->user->identity->aspirante->gcm;
                     if(empty($gcm))
@@ -243,6 +243,7 @@ class SiteController extends Controller
                         $empresaPaquete->id_empresa = $user->id;
                         $empresaPaquete->id_paquete = Paquete::findOne(['precio' => 0])->id;
                         $empresaPaquete->fecha_expiracion = date('Y-m-d', strtotime("+1 month"));//'Y-m-d H:i:s'
+                        $empresaPaquete->save();
                     }
                     return $this->goHome();
                 }

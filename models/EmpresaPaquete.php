@@ -32,7 +32,7 @@ class EmpresaPaquete extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_empresa', 'id_paquete', 'no_vacante', 'fecha_expiracion'], 'required'],
+            [['id_empresa', 'id_paquete', 'no_vacante', 'fecha_expiracion'], 'required', 'message' => Yii::t('app', 'El campo no puede estar vacio')],
             [['id_empresa', 'id_paquete', 'no_vacante'], 'integer'],
             [['fecha_expiracion'], 'safe'],
             [['id_empresa'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_empresa' => 'id_usuario']],

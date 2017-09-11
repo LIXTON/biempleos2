@@ -2,38 +2,44 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Vacante */
+/* @var $vacante app\models\Vacante */
 /* @var $form yii\widgets\ActiveForm */
+$locales = ArrayHelper::map($local, 'id', function ($local, $defaultValue) {
+    return $local->calle . ' ' . $local->numero . ' ' . $local->colonia . ' C.P. ' . $local->codigo_postal . ' ' . $local->ciudad . ', ' . $local->estado . ', ' . $local->pais;
+});
 ?>
 
 <div class="vacante-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id_empresa')->textInput() ?>
+    <?php
+    if($vacante->isNewRecord) {
+        $eps = ArrayHelper::map($ep, 'id', function ($eps, $defaultValue) {
+            return $eps->idPaquete->nombre;
+        });
+        echo $form->field($ep[0], 'id')->dropdownList($eps, ['prompt' => Yii::t('app', 'Escoge el paquete a usar')])->label('Paquete');
+    }
+    ?>
 
-    <?= $form->field($model, 'id_local')->textInput() ?>
+    <?= $form->field($vacante, 'id_local')->dropdownList($locales, ['prompt' => Yii::t('app', 'Selecciona un local')])->label('Local') ?>
 
-    <?= $form->field($model, 'puesto')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($vacante, 'puesto')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'sueldo')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($vacante, 'sueldo')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'ofrece')->textarea(['rows' => 6]) ?>
+    <?= $form->field($vacante, 'ofrece')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'requisito')->textarea(['rows' => 6]) ?>
+    <?= $form->field($vacante, 'requisito')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'horario')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'fecha_publicacion')->textInput() ?>
-
-    <?= $form->field($model, 'fecha_finalizacion')->textInput() ?>
-
-    <?= $form->field($model, 'no_cita')->textInput() ?>
+    <?= $form->field($vacante, 'horario')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($vacante->isNewRecord ? Yii::t('app', 'Crear') : Yii::t('app', 'Actualizar'), ['class' => $vacante->isNewRecord ? 'btn btn-success' : 'btn btn-primary', 'name' => 'principal', 'value' => '1']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Publicar'), ['class' => 'btn btn-primary', 'name' => 'publicar', 'value' => 2]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

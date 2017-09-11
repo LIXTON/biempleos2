@@ -12,8 +12,6 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?php /*$form->field($model, 'id_empresa')->textInput()*/ ?>
-
     <?= $form->field($model, 'calle')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'numero')->textInput() ?>
@@ -22,13 +20,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'codigo_postal')->textInput() ?>
 
-    <?= $form->field($model, 'pais')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'ciudad')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'estado')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'ciudad')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'pais')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'activo')->textInput() ?>
+    <?= $form->field($model, 'activo')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

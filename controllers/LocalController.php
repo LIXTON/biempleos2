@@ -103,6 +103,11 @@ class LocalController extends Controller
     {
         $model = $this->findModel($id);
 
+        if (count($model->vacantes) > 0) {
+            Yii::$app->session->setFlash('error', 'El local no puede ser editado ya que fue usado en una o varias vacantes');
+            return $this->redirect(['index']);
+        }
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -121,7 +126,14 @@ class LocalController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        
+        if (count($model->vacantes) == 0) {
+            Yii::$app->session->setFlash('error', 'El local no puede ser eliminado ya que fue usado en una o varias vacantes');
+            return $this->redirect(['index']);
+        }
+        
+        $model->delete();
 
         return $this->redirect(['index']);
     }
