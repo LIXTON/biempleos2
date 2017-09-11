@@ -14,7 +14,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Crear Vacante'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php
+        if(Yii::$app->user->identity->rol == "empresa")
+            echo Html::a(Yii::t('app', 'Crear Vacante'), ['create'], ['class' => 'btn btn-success']);
+        ?>
     </p>
     <?php Pjax::begin(); ?>    
     <?= GridView::widget([
