@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-//  Se utiliza para indicar quien creo o edito algo
+//  Se utiliza para indicar la relacion con el usuario
 use yii\behaviors\BlameableBehavior;
 
 /**

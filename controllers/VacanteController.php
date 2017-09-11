@@ -71,7 +71,14 @@ class VacanteController extends Controller
     public function actionIndex()
     {
         $query = Vacante::find()->where('fecha_finalizacion >= :fecha', [':fecha' => date("Y-m-d")]);
-        $query = Yii::$app->user->identity->rol == "empresa" ? $query->andWhere(['id_empresa' => Yii::$app->user->id]):$query;
+        switch(Yii::$app->user->identity->rol) {
+            case "empresa":
+                $query = $query->andWhere(['id_empresa' => Yii::$app->user->id]);
+                break;
+            case "aspirante":
+                $query = $query->andWhere('not', ['fecha_publicacion' => null]);
+                break;
+        }
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -95,7 +102,7 @@ class VacanteController extends Controller
     public function actionHistorial()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Vacante::find()->where(['id_empresa' => Yii::$app->user->id])->andWhere('not', ['fecha_finalizacion' => null]),
+            'query' => Vacante::find()->where(['id_empresa' => Yii::$app->user->id])->andWhere('fecha_finalizacion < :fecha', [':fecha' => date("Y-m-d")]),
         ]);
 
         return $this->render('index', [
@@ -112,6 +119,7 @@ class VacanteController extends Controller
      */
     public function actionView($id, $id_empresa, $id_local)
     {
+        //  EN ESTA VISTA DEBE AGREGARSE LAS OPCIONES DE CITA DEL ASPIRANTE     //
         return $this->render('view', [
             'model' => $this->findModel($id, $id_empresa, $id_local),
         ]);

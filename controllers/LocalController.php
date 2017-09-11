@@ -148,6 +148,7 @@ class LocalController extends Controller
      */
     protected function findModel($id)
     {
+        //  id_empresa se proporciona por el id de la empresa logueada      //
         if (($model = Local::findOne(['id' => $id, 'id_empresa' => Yii::$app->user->id])) !== null) {
             return $model;
         } else {

@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-//  Se utiliza para indicar quien creo o edito algo
+//  Se utiliza para indicar que empresa la creo o la edito
 use yii\behaviors\BlameableBehavior;
 
 //  Se elimino fecha_expiracion por ser redundante              //
