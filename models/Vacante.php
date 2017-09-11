@@ -6,6 +6,9 @@ use Yii;
 //  Se utiliza para indicar quien creo o edito algo
 use yii\behaviors\BlameableBehavior;
 
+//  Se elimino fecha_expiracion por ser redundante              //
+//  Fecha_finalizacion equivale lo mismo a fecha_expiracion     //
+
 /**
  * This is the model class for table "vacante".
  *
