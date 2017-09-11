@@ -71,7 +71,7 @@ class VacanteController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Vacante::find()->where(['id_empresa' => Yii::$app->user->id, 'fecha_finalizacion' => null])->andWhere('fecha_expiracion >= :fecha', [':fecha' => date("Y-m-d")]),
+            'query' => Vacante::find()->where(['id_empresa' => Yii::$app->user->id])->andWhere('fecha_finalizacion >= :fecha', [':fecha' => date("Y-m-d")]),
         ]);
 
         return $this->render('index', [
@@ -91,13 +91,6 @@ class VacanteController extends Controller
      */
     public function actionHistorial()
     {
-        $vacante = Vacante::find()->where('fecha_expiracion < :fecha', [':fecha' => date("Y-m-d")])->andWhere(['fecha_finalizacion' => null])->all();
-        
-        foreach($vacante as $v) {
-            $v->fecha_finalizacion = $v->fecha_expiracion;
-            $v->save();
-        }
-        
         $dataProvider = new ActiveDataProvider([
             'query' => Vacante::find()->where(['id_empresa' => Yii::$app->user->id])->andWhere('not', ['fecha_finalizacion' => null]),
         ]);
@@ -153,18 +146,13 @@ class VacanteController extends Controller
                     $ep->no_vacante -= 1;
                     $ep->save();
                 }
-                $vacante->fecha_expiracion = $ep->fecha_expiracion;
+                $vacante->fecha_finalizacion = $ep->fecha_expiracion;
                 $vacante->fecha_publicacion = Yii::$app->request->post("publicar") ? date("Y-m-d H:i:s"):null;
                 $vacante->no_cita = $ep->idPaquete->no_cita;
                 $vacante->save();
                 
                 return $this->redirect(['view', 'id' => $vacante->id, 'id_empresa' => Yii::$app->user->id, 'id_local' => $vacante->id_local]);
             } else {
-                if (empty($vacante->fecha_finalizacion)) {
-                    $vacante->fecha_finalizacion = $vacante->fecha_expiracion;
-                    $vacante->save();
-                }
-                
                 Yii::$app->session->setFlash('error', "No puede crearse la vacante debido a que expiro el paquete contratado.");
                 return $this->redirect(['index']);
             }
@@ -191,15 +179,10 @@ class VacanteController extends Controller
         $local = Local::findAll(['id_empresa' => Yii::$app->user->id, 'activo' => true]);
         $msgError = null;
         
-        if ($isUnavaliable = !empty($vacante->fecha_finalizacion)) {
-            $msgError = "La vacante no puede ser editada debido a que finalizo la contratacion la contratacion de aspirantes.";
-        } else if ($isUnavaliable = !empty($vacante->fecha_publicacion)) {
+        if ($isUnavaliable = !empty($vacante->fecha_publicacion))
             $msgError = "La vacante no puede ser editada debido a que fue publicada.";
-        } else if ($isUnavaliable = $vacante->fecha_expiracion < date('Y-m-d')) {
-            $msgError = "La vacante no puede ser editada debido a que expiro el paquete.";
-            $vacante->fecha_finalizacion = $vacante->fecha_expiracion;
-            $vacante->save();
-        }
+        else if ($isUnavaliable = $vacante->fecha_finalizacion < date('Y-m-d'))
+            $msgError = "La vacante no puede ser editada debido a que finalizo el tiempo de contratacion.";
         
         if ($isUnavaliable) {
             Yii::$app->session->setFlash('error', $msgError);
