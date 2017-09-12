@@ -15,7 +15,8 @@ use app\widgets\Alert;
 //  Las siguientes dos lineas son para el funcionamiento de los roles   //
 use yii\filters\AccessControl;
 use app\components\AccessRule;
-
+//  Se utiliza en caso de errores de datos introducidos o bien          //
+//  alteracion de datos                                                 //
 use yii\web\BadRequestHttpException;
 
 /**
@@ -76,7 +77,7 @@ class VacanteController extends Controller
                 $query = $query->andWhere(['id_empresa' => Yii::$app->user->id]);
                 break;
             case "aspirante":
-                $query = $query->andWhere('not', ['fecha_publicacion' => null]);
+                $query = $query->andWhere(['not', ['fecha_publicacion' => null]]);
                 break;
         }
         
@@ -144,7 +145,7 @@ class VacanteController extends Controller
             return $this->redirect(['local/create']);
         }
         
-        //  Si no hay locales registrados redirecciona al index y muestra el error   //
+        //  Si no hay paquetes contratados redirecciona al index y muestra el error   //
         if (count($ep) == 0) {
             Yii::$app->session->setFlash('error', 'Necesitas tener activo algun paquete si deseas continuar.');
             return $this->redirect(['index']);
@@ -262,10 +263,16 @@ class VacanteController extends Controller
     protected function findModel($id, $id_empresa, $id_local)
     {
         //  Si una empresa inicio sesion el id_empresa se busca por la sesion no por la introducida     //
-        $id_empresa = Yii::$app->user->identity->rol == 'empresa' ? Yii::$app->user->id:$id_empresa;
-        $model = Vacante::findOne(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local]);
-        //$model = $active ? Vacante::findOne(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local, 'fecha_finalizacion' => null]):Vacante::find()->where(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local])->andWhere(['not',['fecha_finalizacion' => null]])->one();
-            
+        $model = null;
+        switch (Yii::$app->user->identity->rol) {
+            case "empresa":
+                $model = Vacante::findOne(['id' => $id, 'id_empresa' => Yii::$app->user->id, 'id_local' => $id_local]);
+                break;
+            case "aspirante":
+                $model = Vacante::find()->where(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local])->andWhere(['not', ['fecha_publicacion' => null]])->one();
+                break;
+        }
+
         if ($model !== null) {
             return $model;
         } else {

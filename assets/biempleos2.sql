@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-09-2017 a las 07:39:59
+-- Tiempo de generación: 12-09-2017 a las 01:36:01
 -- Versión del servidor: 5.7.9
 -- Versión de PHP: 5.6.16
 
@@ -33,6 +33,13 @@ CREATE TABLE IF NOT EXISTS `aspirante` (
   `activo` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `aspirante`
+--
+
+INSERT INTO `aspirante` (`id_usuario`, `gcm`, `activo`) VALUES
+(4, '123', 1);
 
 -- --------------------------------------------------------
 
@@ -68,6 +75,15 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `empresa`
+--
+
+INSERT INTO `empresa` (`id_usuario`, `nombre`) VALUES
+(1, 'alfde'),
+(2, 'zes'),
+(3, 'asd');
+
 -- --------------------------------------------------------
 
 --
@@ -84,7 +100,16 @@ CREATE TABLE IF NOT EXISTS `empresa_paquete` (
   PRIMARY KEY (`id`,`id_empresa`) USING BTREE,
   KEY `FK_EmpresaEP` (`id_empresa`),
   KEY `FK_PaqueteEP` (`id_paquete`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `empresa_paquete`
+--
+
+INSERT INTO `empresa_paquete` (`id`, `id_empresa`, `id_paquete`, `no_vacante`, `fecha_expiracion`) VALUES
+(1, 1, 1, -1, '2017-10-09'),
+(2, 2, 1, -1, '2017-10-09'),
+(3, 3, 1, -1, '2017-10-09');
 
 -- --------------------------------------------------------
 
@@ -106,7 +131,15 @@ CREATE TABLE IF NOT EXISTS `local` (
   `activo` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`,`id_empresa`) USING BTREE,
   KEY `FK_EmpresaLocal` (`id_empresa`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `local`
+--
+
+INSERT INTO `local` (`id`, `id_empresa`, `calle`, `numero`, `colonia`, `codigo_postal`, `pais`, `estado`, `ciudad`, `activo`) VALUES
+(1, 1, 'test', 123, 'prueba', 123, 'asdasd', 'asdasd', 'asdas', 1),
+(2, 1, 'prueba', 321, 'qwe', 321, 'ewq', 'ewq', 'ewq', 1);
 
 -- --------------------------------------------------------
 
@@ -244,6 +277,13 @@ CREATE TABLE IF NOT EXISTS `solicitud` (
   PRIMARY KEY (`id_aspirante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `solicitud`
+--
+
+INSERT INTO `solicitud` (`id_aspirante`, `foto`, `nombre`, `fecha_nacimiento`, `sexo`, `nacionalidad`, `estatura`, `peso`, `estado_civil`, `calle`, `numero`, `colonia`, `codigo_postal`, `curp`, `rfc`, `nss`, `afore`, `cartilla_militar`, `pasaporte`, `licencia`, `clase_licencia`, `numero_licencia`, `deportista`, `deporte`, `club`, `pasatiempo`, `meta`, `estudio`, `escuela`, `inicio`, `finalizacion`, `titulo`, `idioma`, `porcentaje`, `funciones_oficina`, `maquinaria_oficina`, `software`, `otras_funciones`, `trabajo_anterior`, `tiempo_trabajo`, `compania`, `direccion`, `telefono`, `puesto`, `sueldo_inicial`, `sueldo_final`, `motivo_separacion`, `nombre_jefe`, `puesto_jefe`, `nombre_ref1`, `domicilio_ref1`, `telefono_ref1`, `ocupacion_ref1`, `tiempo_ref1`, `nombre_ref2`, `domicilio_ref2`, `telefono_ref2`, `ocupacion_ref2`, `tiempo_ref2`, `nombre_ref3`, `domicilio_ref3`, `telefono_ref3`, `ocupacion_ref3`, `tiempo_ref3`, `parientes`, `afianzado`, `sindicato`, `seguro_vida`, `viajar`, `cambiar_residencia`, `otros_ingresos`, `importe_ingresos`, `conyuge_trabaja`, `percepcion`, `casa_propia`, `valor_casa`, `paga_renta`, `renta`, `dependientes`, `automovil`, `deudas`, `importe_deudas`, `acreedor`, `abono_mensual`, `gastos_mensuales`) VALUES
+(4, '', 'blah', NULL, NULL, '', NULL, NULL, NULL, '', '', '', '', '', '', '', '', '', '', NULL, NULL, '', NULL, '', NULL, '', '', NULL, '', NULL, NULL, NULL, '', NULL, '', '', '', '', NULL, NULL, '', '', '', '', NULL, NULL, '', '', '', '', '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -261,7 +301,17 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `correo` (`correo`),
   UNIQUE KEY `reset_token` (`contrasena_reset_token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`id`, `correo`, `auth_key`, `contrasena_hash`, `contrasena_reset_token`, `rol`) VALUES
+(1, 'zas@g.com', 'ncx3boBBYog0IQn8m-4fjI-n3TRyIepT', '$2y$13$QERBeW4V0C07opXP86BFreJiI2K1ZYMO5ata6HPF4q2AMWQwS7lI6', NULL, 'empresa'),
+(2, 'des@g.com', '1QCwngo2a3-39n27oEK78L42__5_Rm5e', '$2y$13$/liva2uafISXlHNjkiOH6.7chGQ5ze8MGlFdbnO4uJ6JwHUpubH0a', NULL, 'empresa'),
+(3, 'asd@g.com', 'qWycFlrwtFkFRgzIjJvckirK47J8qsr-', '$2y$13$FBN2/vbtAf1jo7bTjybCGex4NSVwq63SGz4vtW/1f4a/gurhRZPKC', NULL, 'empresa'),
+(4, 'movil@g.com', 'seec_kP_xxQJq0LsDXksDilE24zbow5P', '$2y$13$oeT/ZmyrDUspJbEjtsTsi.kRzRjcXvF7.nPBqj52kIiHUfMCN4Wtq', NULL, 'aspirante');
 
 -- --------------------------------------------------------
 
@@ -280,12 +330,20 @@ CREATE TABLE IF NOT EXISTS `vacante` (
   `requisito` longtext NOT NULL,
   `horario` varchar(100) NOT NULL,
   `fecha_publicacion` timestamp NULL DEFAULT NULL,
-  `fecha_finalizacion` timestamp NULL DEFAULT NULL,
+  `fecha_finalizacion` timestamp NOT NULL,
   `no_cita` int(11) NOT NULL,
   PRIMARY KEY (`id`,`id_empresa`,`id_local`) USING BTREE,
   KEY `FK_EmpresaVacante` (`id_empresa`),
   KEY `FK_LocalVacante` (`id_local`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `vacante`
+--
+
+INSERT INTO `vacante` (`id`, `id_empresa`, `id_local`, `puesto`, `sueldo`, `ofrece`, `requisito`, `horario`, `fecha_publicacion`, `fecha_finalizacion`, `no_cita`) VALUES
+(1, 1, 2, 'asd', 'asd', 'asd', 'asd', 'asd', NULL, '2017-10-09 06:00:00', -1),
+(2, 1, 1, 'test', '123', 'qwe', 'qwe', 'prueba', '2017-09-12 04:49:43', '2017-10-09 06:00:00', -1);
 
 -- --------------------------------------------------------
 
@@ -295,7 +353,7 @@ CREATE TABLE IF NOT EXISTS `vacante` (
 
 DROP TABLE IF EXISTS `vacante_aspirante`;
 CREATE TABLE IF NOT EXISTS `vacante_aspirante` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_aspirante` int(11) NOT NULL,
   `id_vacante` int(11) NOT NULL,
   `estado` varchar(20) NOT NULL,

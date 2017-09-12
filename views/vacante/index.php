@@ -15,8 +15,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?php
-        if(Yii::$app->user->identity->rol == "empresa")
-            echo Html::a(Yii::t('app', 'Crear Vacante'), ['create'], ['class' => 'btn btn-success']);
+        switch(Yii::$app->user->identity->rol) {
+            case "empresa":
+                echo Html::a(Yii::t('app', 'Crear Vacante'), ['create'], ['class' => 'btn btn-success']);
+                break;
+            case "aspirante":
+                //  Opciones aspirante
+                break;
+        }
         ?>
     </p>
     <?php Pjax::begin(); ?>    
@@ -37,7 +43,19 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'fecha_finalizacion',
             'no_cita',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => Yii::$app->user->identity->rol == "empresa" ? '{view} {update} {delete} {lista}':'{view}',
+                'buttons' => [
+                    'lista' => function ($url, $model, $key) {
+                        return Html::a('<span class=\'glyphicon glyphicon-th-list\'></span>', $url);
+                                      //['vacante-aspirante/index', 'id_vacante' => $model->id]);
+                    }
+                ],
+                'urlCreator' => function ($action, $model, $key, $index, $this) {
+                    return $action . "?id=" . $model->id . "&id_empresa=" . $model->id_empresa . "&id_local=" . $model->id_local;
+                }
+            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>
