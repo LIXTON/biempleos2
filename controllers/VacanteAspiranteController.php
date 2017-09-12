@@ -37,7 +37,7 @@ class VacanteAspiranteController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index', 'view', 'indexmovil'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -59,6 +59,20 @@ class VacanteAspiranteController extends Controller
     {
         $dataProvider = new ActiveDataProvider([
             'query' => VacanteAspirante::find(),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Otra action que se creo para visualizar notificaciones de los aspirantes
+     * @return mixed
+     */
+    public function actionIndexmovil(){
+        $dataProvider = new ActiveDataProvider([
+            'query' => VacanteAspirante::find(["id_aspirante"= Yii::$app->user->id]),
         ]);
 
         return $this->render('index', [

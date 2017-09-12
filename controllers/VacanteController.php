@@ -43,7 +43,7 @@ class VacanteController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['view'],
+                        'actions' => ['view','indexmovil'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -72,6 +72,23 @@ class VacanteController extends Controller
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Vacante::find()->where(['id_empresa' => Yii::$app->user->id, 'fecha_finalizacion' => null])->andWhere('fecha_expiracion >= :fecha', [':fecha' => date("Y-m-d")]),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lists all Vacante models.
+     * YOLO cree otro index para movil
+     * 
+     * @return mixed
+     */
+    public function actionIndexmovil()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Vacante::find()->where(['fecha_finalizacion' => null])->andWhere('fecha_expiracion >= :fecha', [':fecha' => date("Y-m-d")]),
         ]);
 
         return $this->render('index', [
