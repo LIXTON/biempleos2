@@ -3,8 +3,11 @@
 namespace app\models;
 
 use Yii;
-//  Se utiliza para indicar quien creo o edito algo
+//  Se utiliza para indicar que empresa la creo o la edito
 use yii\behaviors\BlameableBehavior;
+
+//  Se elimino fecha_expiracion por ser redundante              //
+//  Fecha_finalizacion equivale lo mismo a fecha_expiracion     //
 
 /**
  * This is the model class for table "vacante".
@@ -20,7 +23,6 @@ use yii\behaviors\BlameableBehavior;
  * @property string $fecha_publicacion
  * @property string $fecha_finalizacion
  * @property integer $no_cita
- * @property string $fecha_expiracion
  *
  * @property Empresa $idEmpresa
  * @property Local $idLocal
@@ -56,10 +58,10 @@ class Vacante extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_local', 'puesto', 'requisito', 'horario', 'no_cita', 'fecha_expiracion'], 'required'],
+            [['id_local', 'puesto', 'requisito', 'horario', 'no_cita', 'fecha_finalizacion'], 'required'],
             [['id_local', 'no_cita'], 'integer'],
             [['ofrece', 'requisito'], 'string'],
-            [['fecha_publicacion', 'fecha_finalizacion', 'fecha_expiracion'], 'safe'],
+            [['fecha_publicacion', 'fecha_finalizacion'], 'safe'],
             [['puesto'], 'string', 'max' => 255],
             [['sueldo', 'horario'], 'string', 'max' => 100],
             [['id_local'], 'exist', 'skipOnError' => true, 'targetClass' => Local::className(), 'targetAttribute' => ['id_local' => 'id']],
@@ -83,7 +85,6 @@ class Vacante extends \yii\db\ActiveRecord
             'fecha_publicacion' => Yii::t('app', 'Fecha Publicacion'),
             'fecha_finalizacion' => Yii::t('app', 'Fecha Finalizacion'),
             'no_cita' => Yii::t('app', 'No Cita'),
-            'fecha_expiracion' => Yii::t('app', 'Fecha Expiracion'),
         ];
     }
 

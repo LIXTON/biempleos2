@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+//  Se utiliza para indicar que empresa la creo o la edito
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "vacante_aspirante".
@@ -19,12 +21,27 @@ use Yii;
  */
 class VacanteAspirante extends \yii\db\ActiveRecord
 {
+    const SCENARIO_CREATE = 'create';
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'vacante_aspirante';
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'id_aspirante',
+                'updatedByAttribute' => false,
+            ]
+        ];
     }
 
     /**
@@ -33,11 +50,12 @@ class VacanteAspirante extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'id_aspirante', 'id_vacante', 'estado'], 'required'],
+            [[/*'id_aspirante', */'id_vacante', /*'estado'*/], 'required'],
             [['id', 'id_aspirante', 'id_vacante'], 'integer'],
             [['fecha_cambio_estado'], 'safe'],
             [['estado'], 'string', 'max' => 20],
-            [['id_aspirante'], 'exist', 'skipOnError' => true, 'targetClass' => Aspirante::className(), 'targetAttribute' => ['id_aspirante' => 'id_usuario']],
+            ['estado', 'default', 'value' => 'pendiente'],//, 'on' => self::SCENARIO_CREATE],
+            //[['id_aspirante'], 'exist', 'skipOnError' => true, 'targetClass' => Aspirante::className(), 'targetAttribute' => ['id_aspirante' => 'id_usuario']],
             [['id_vacante'], 'exist', 'skipOnError' => true, 'targetClass' => Vacante::className(), 'targetAttribute' => ['id_vacante' => 'id']],
         ];
     }

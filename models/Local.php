@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+//  Se utiliza para indicar que empresa la creo o la edito
 use yii\behaviors\BlameableBehavior;
 
 /**

@@ -1,0 +1,55 @@
+--
+-- ORDEN NECESARIO AL ACTUALIZAR ALGUNA BD
+--
+
+-- --------------------------------------------------------
+
+--
+-- DROP DE TABLAS EN ORDEN
+--
+
+DROP TABLE IF EXISTS `cita`;
+DROP TABLE IF EXISTS `solicitud`;
+DROP TABLE IF EXISTS `vacante_aspirante`;
+DROP TABLE IF EXISTS `vacante`;
+DROP TABLE IF EXISTS `local`;
+DROP TABLE IF EXISTS `empresa_paquete`;
+DROP TABLE IF EXISTS `aspirante`;
+DROP TABLE IF EXISTS `empresa`;
+DROP TABLE IF EXISTS `oferta`;
+DROP TABLE IF EXISTS `usuario`;
+DROP TABLE IF EXISTS `paquete`;
+
+Paquete |             Usuario                 |
+Oferta  |-----Empresa-----+----Aspirante------|
+  EmpresaPaquete  Local   |                   |
+        |        Vacante  |                   |
+        |          VacanteAspirante Solicitud |
+        |               Cita                  |
+               
+Simplificado:
+P  |   U   |
+O  |-E-+-A-|
+  E-P L|   |
+   | V |   |
+   |  V-A S|
+   |   C   |
+
+-- --------------------------------------------------------
+
+/**
+ *  CREACION DE TABLAS EN ORDEN:
+ *  -paquete
+ *  -usuario
+ *  -oferta
+ *  -empresa
+ *  -aspirante
+ *  -empresa_paquete
+ *  -local
+ *  -vacante
+ *  -vacante_aspirante
+ *  -solicitud
+ *  -cita
+ */
+
+-- --------------------------------------------------------
