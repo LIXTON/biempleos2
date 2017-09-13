@@ -84,17 +84,24 @@ class CitaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id_v)
     {
-        $model = new Cita();
+        $cita = new Cita();
+        $local = Local::findAll(['id_empresa' => Yii::$app->user->id]);
+        $v = VacanteAspirante::findAll(['id_vacante' => $id_v]);
+        $aspirantes = array();
+        foreach($v as $i)
+            array_push($aspirantes, $i->idAspirante);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($cita->load(Yii::$app->request->post())) {
+            $cita->id_va = $v[0]->id;
+            $cita->save();
+            return $this->redirect(['view', 'id' => $cita->id, 'id_empresa' => $cita->id_empresa]);
         }
+
+        return $this->render('create', [
+            'model' => $cita,
+        ]);
     }
 
     /**
@@ -142,6 +149,7 @@ class CitaController extends Controller
      */
     protected function findModel($id, $id_empresa)
     {
+        $id_empresa = Yii::$app->user->identity->rol == "empresa" ? Yii::$app->user->id:$id_empresa;
         if (($model = Cita::findOne(['id' => $id, 'id_empresa' => $id_empresa])) !== null) {
             return $model;
         } else {
