@@ -16,6 +16,7 @@ use yii\behaviors\BlameableBehavior;
  * @property integer $id_va
  * @property string $fecha
  * @property string $mensaje
+ * @property string $respuesta
  *
  * @property Empresa $idEmpresa
  * @property Local $idLocal
@@ -55,6 +56,7 @@ class Cita extends \yii\db\ActiveRecord
             [['id_empresa', 'id_local', 'id_va'], 'integer'],
             [['fecha'], 'safe'],
             [['mensaje'], 'string'],
+            [['respuesta'], 'string', 'max' => 100],
             [['direccion'], 'string', 'max' => 255],
             [['id_local'], 'exist', 'skipOnError' => true, 'targetClass' => Local::className(), 'targetAttribute' => ['id_local' => 'id']],
             [['id_va'], 'exist', 'skipOnError' => true, 'targetClass' => VacanteAspirante::className(), 'targetAttribute' => ['id_va' => 'id']],
