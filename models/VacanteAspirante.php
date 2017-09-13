@@ -50,12 +50,11 @@ class VacanteAspirante extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[/*'id_aspirante', */'id_vacante', /*'estado'*/], 'required'],
+            ['id_vacante', 'required'],
             [['id', 'id_aspirante', 'id_vacante'], 'integer'],
             [['fecha_cambio_estado'], 'safe'],
             [['estado'], 'string', 'max' => 20],
-            ['estado', 'default', 'value' => 'pendiente'],//, 'on' => self::SCENARIO_CREATE],
-            //[['id_aspirante'], 'exist', 'skipOnError' => true, 'targetClass' => Aspirante::className(), 'targetAttribute' => ['id_aspirante' => 'id_usuario']],
+            ['estado', 'default', 'value' => 'pendiente', 'on' => self::SCENARIO_CREATE],
             [['id_vacante'], 'exist', 'skipOnError' => true, 'targetClass' => Vacante::className(), 'targetAttribute' => ['id_vacante' => 'id']],
         ];
     }

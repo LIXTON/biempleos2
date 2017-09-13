@@ -141,7 +141,7 @@ class VacanteAspiranteController extends Controller
      */
     public function actionCreate()
     {
-        $model = new VacanteAspirante();//['scenario' => VacanteAspirante::SCENARIO_CREATE]);
+        $model = new VacanteAspirante(['scenario' => VacanteAspirante::SCENARIO_CREATE]);
 
         $model->id_vacante = Yii::$app->request->post('id');
 
