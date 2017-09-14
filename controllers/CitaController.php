@@ -97,6 +97,8 @@ class CitaController extends Controller
                 foreach($va as $i) {
                     $v->no_cita = $v->no_cita < 0 ? $v->no_cita:($v->no_cita - 1);
 
+                    $i->estado = "aceptada";
+                    $i->save();
                     $cita->id_va = $i->id;
                     //  Posible cambio a un unico sql que se ejecute al salir del foreach
                     $cita->save();
