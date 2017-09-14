@@ -61,10 +61,10 @@ class VacanteAspiranteController extends Controller
     public function actionIndex()
     {
         $query = (new \yii\db\Query());
-        //  Empresa:
+        //  Empresa: SELECT * FROM `vacante`, `vacante_aspirante` WHERE `vacante`.id != `vacante_aspirante`.id_vacante AND `vacante_aspirante`.`id_aspirante` = 5 AND `vacante`.`fecha_finalizacion` <= CURRENT_TIMESTAMP,
         //  El query devuelve todos los aspirantes que aplicaron a la vacante
         //
-        //  Aspirante:
+        //  Aspirante:(new \yii\db\Query())->select('*')->from(['vacante', 'vacante_aspirante'])->where('vacante.id <> vacante_aspirante.id_vacante AND vacante_aspirante.id_aspirante = :aspirante AND vacante.fecha_finalizacion <= :fecha', [':aspirante' => 5, ':fecha' => date('Y-m-d H:i:s')]);
         //  El query devuelve todas las vacantes que aplico y que siguen activas
         switch(Yii::$app->user->identity->rol) {
             case "empresa":
@@ -114,7 +114,7 @@ class VacanteAspiranteController extends Controller
      */
     public function actionIndexmovil(){
         $dataProvider = new ActiveDataProvider([
-            'query' => VacanteAspirante::find(["id_aspirante"= Yii::$app->user->id]),
+            'query' => VacanteAspirante::find(["id_aspirante"=> Yii::$app->user->id]),
         ]);
 
         return $this->render('index', [

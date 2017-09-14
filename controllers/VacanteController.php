@@ -44,11 +44,7 @@ class VacanteController extends Controller
                     ],
                     [
                         'allow' => true,
-<<<<<<< HEAD
                         'actions' => ['view','indexmovil'],
-=======
-                        'actions' => ['index', 'view'],
->>>>>>> 9aa76975fc31fe980287b07fd6f1cd6187790ea8
                         'roles' => ['@'],
                     ],
                 ],
@@ -140,7 +136,8 @@ class VacanteController extends Controller
      * @return mixed
      */
     public function actionView($id, $id_empresa, $id_local)
-    {
+    {$d = (new \yii\db\Query())->select('*')->from(['vacante', 'vacante_aspirante'])->where('vacante.id <> vacante_aspirante.id_vacante AND vacante_aspirante.id_aspirante = :aspirante AND vacante.fecha_finalizacion <= :fecha', [':aspirante' => 5, ':fecha' => date('Y-m-d H:i:s')]);
+
         //  EN ESTA VISTA DEBE AGREGARSE LAS OPCIONES DE CITA DEL ASPIRANTE     //
         return $this->render('view', [
             'model' => $this->findModel($id, $id_empresa, $id_local),
@@ -290,7 +287,7 @@ class VacanteController extends Controller
                 $model = Vacante::findOne(['id' => $id, 'id_empresa' => Yii::$app->user->id, 'id_local' => $id_local]);
                 break;
             case "aspirante":
-                $model = Vacante::find()->where(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local])->andWhere(['not', ['fecha_publicacion' => null]])->one();
+                $model = Vacante::find()->where(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local])->andWhere('fecha_finalizacion >= :fecha', [':fecha' => date('Y:m:d H:i:s')])->one();
                 break;
         }
 
