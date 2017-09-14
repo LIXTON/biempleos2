@@ -4,9 +4,9 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Cita */
+/* @var $cita app\models\Cita */
 
-$this->title = Yii::t('app', 'Create Cita');
+$this->title = Yii::t('app', 'Crear Cita');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Citas'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -15,7 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
-        'model' => $model,
+        'cita' => $cita,
+        'locales' => $locales,
+        'va' => $va,
     ]) ?>
 
 </div>
