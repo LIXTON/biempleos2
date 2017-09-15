@@ -44,11 +44,7 @@ class VacanteController extends Controller
                     ],
                     [
                         'allow' => true,
-<<<<<<< HEAD
-                        'actions' => ['view','indexmovil'],
-=======
-                        'actions' => ['index', 'view'],
->>>>>>> 9aa76975fc31fe980287b07fd6f1cd6187790ea8
+                        'actions' => ['view','indexmovil','index', 'view'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -103,7 +99,7 @@ class VacanteController extends Controller
     public function actionIndexmovil()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Vacante::find()->where(['fecha_finalizacion' => null])->andWhere('fecha_expiracion >= :fecha', [':fecha' => date("Y-m-d")]),
+            'query' => Vacante::find()->where(['fecha_finalizacion' => null])->andWhere([':fecha' => date("Y-m-d")]),
         ]);
 
         return $this->render('index', [
