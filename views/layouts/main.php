@@ -61,6 +61,19 @@ AppAsset::register($this);
     NavBar::end();
     ?>
 
+    <div class="container clearfix">
+        <?php /*
+        Pjax::begin(['id' => 'alerta-msg']);
+        echo Alert::widget([
+            'options' => [
+                'class' => 'col-xs-12 col-sm-6 col-sm-offset-3 text-center',
+                'style' => 'position: absolute; left: 0;',
+            ],
+        ]);
+        Pjax::end();*/
+        ?>
+    </div>
+
     <div class="container">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
