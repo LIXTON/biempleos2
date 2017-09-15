@@ -44,11 +44,7 @@ class VacanteController extends Controller
                     ],
                     [
                         'allow' => true,
-<<<<<<< HEAD
-                        'actions' => ['view','indexmovil'],
-=======
-                        'actions' => ['index', 'view'],
->>>>>>> 9aa76975fc31fe980287b07fd6f1cd6187790ea8
+                        'actions' => ['index', 'view','indexmovil'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -103,10 +99,9 @@ class VacanteController extends Controller
     public function actionIndexmovil()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Vacante::find()->where(['fecha_finalizacion' => null])->andWhere('fecha_expiracion >= :fecha', [':fecha' => date("Y-m-d")]),
+            'query' => (new \yii\db\Query())->select('`vacante`.id as id, `vacante`.`id_empresa` as id_empresa, `vacante`.`id_local` as id_local, `vacante`.`puesto` as puesto, `vacante`.`sueldo` as sueldo, `vacante`.`ofrece` as ofrece, `vacante`.`requisito` as requisito, `vacante`.`horario` as horario, `vacante`.`fecha_publicacion` as fecha_publicacion, `vacante`.`fecha_finalizacion` as fecha_finalizacion, `vacante`.`no_cita` as no_cita')->from(['vacante', 'vacante_aspirante'])->where('vacante.id <> vacante_aspirante.id_vacante AND vacante_aspirante.id_aspirante = :aspirante AND vacante.fecha_finalizacion <= :fecha', [':aspirante' => 5, ':fecha' => date('Y-m-d H:i:s')])
         ]);
-
-        return $this->render('index', [
+        return $this->render('indexmovil', [
             'dataProvider' => $dataProvider,
         ]);
     }

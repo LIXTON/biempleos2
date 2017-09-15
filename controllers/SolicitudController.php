@@ -29,10 +29,6 @@ class SolicitudController extends Controller
                 'class' => AccessControl::className(),
                 // Se crea un nuevo AccessRule para lidiar con los roles //
                 'ruleConfig' => [
-                    /* 
-                        existe un error que no encuentra app\components\AccessRule::className()
-                        se modifico de la siguiente manera:
-                    */
                     'class' => AccessRule::className(),
                 ],
                 'rules' => [

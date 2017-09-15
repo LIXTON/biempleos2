@@ -21,6 +21,9 @@ use yii\widgets\ActiveForm;
         <h2>Datos personales:</h2>
             <?= $form->field($model, 'nombre')->textInput() ?>
             <?= $form->field($model, 'fecha_nacimiento')->textInput() ?>
+
+            <?= $form->field($model, 'sexo')->dropDownList(["1"=>"hombre","2"=>"mujer"]) ?>
+
             <?= $form->field($model, 'sexo')->textInput() ?>
             <?= $form->field($model, 'nacionalidad')->textInput() ?>
             <?= $form->field($model, 'estatura')->textInput() ?>

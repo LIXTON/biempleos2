@@ -114,7 +114,7 @@ class VacanteAspiranteController extends Controller
      */
     public function actionIndexmovil(){
         $dataProvider = new ActiveDataProvider([
-            'query' => VacanteAspirante::find(["id_aspirante"= Yii::$app->user->id]),
+            'query' => VacanteAspirante::find(["id_aspirante"=> Yii::$app->user->id]),
         ]);
 
         return $this->render('index', [

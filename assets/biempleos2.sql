@@ -20,7 +20,7 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 -- Base de datos: `biempleos2`
 --
 
-DROP DATABASE IF NOT EXISTS `biempleos2`;
+DROP DATABASE IF EXISTS `biempleos2`;
 CREATE DATABASE IF NOT EXISTS `biempleos2`;
 
 -- --------------------------------------------------------

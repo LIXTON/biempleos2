@@ -1,0 +1,24 @@
+Bugs:
+ [x] Documento SQL, linea 23:
+	Original: DROP DATABASE IF NOT EXISTS `biempleos2`;
+	Cambio: DROP DATABASE IF EXISTS `biempleos2`;
+ [ ] El custom rule no funciona en Site/movilmenu:
+	Comentarios: Mirar linea 52 de SiteController
+ [x] No hay Link de signup
+	Comentarios: Agrege los links a los singup, ver linea 48 y 49 de View/site/login
+ [x] Hay una inconsistencia entre mi git y tu git
+	Comentarios: Se encuentra en la linea 47 de vacanteController
+	Original:
+
+	<<<<<<< HEAD
+	                        'actions' => ['view','indexmovil'],
+	=======
+	                        'actions' => ['index', 'view'],
+	>>>>>>> 9aa76975fc31fe980287b07fd6f1cd6187790ea8
+
+	Cambio:
+	                        'actions' => ['index', 'view','indexmovil'],
+ [x] El cambio anterior descubrio un error de base de datos:
+ 	Msg de error:
+ 	SQLSTATE[42S22]: Column not found: 1054 Unknown column 'fecha_expiracion' in 'where clause' The SQL being executed was: SELECT COUNT(*) FROM `vacante` WHERE (`fecha_finalizacion` IS NULL) AND (fecha_expiracion >= '2017-09-14')
+ 	solucionado: Se cambio parte del codigo php para que jalara (fecha de expiración fue borrado de la BD).
