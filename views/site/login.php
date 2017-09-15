@@ -44,6 +44,11 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
 
+        <?php
+            echo Html::a('¿Eres una empresa y quieres contratar?, registrate aquí', ['site/signupw']) . "<br>";
+            echo Html::a('¿Te gustaría buscar un empleo?, registrate aquí', ['site/signupm']) . "<br>";
+        ?>
+
     <?php ActiveForm::end(); ?>
 
     <div class="col-lg-offset-1" style="color:#999;">

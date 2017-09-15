@@ -72,7 +72,7 @@ class CitaController extends Controller
      * @param integer $id_empresa
      * @return mixed
      */
-    public function actionView($id, $id_empresa)
+    public function actionView($id, $id_empresa = 0)
     {
         return $this->render('view', [
             'model' => $this->findModel($id, $id_empresa),
@@ -84,17 +84,40 @@ class CitaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id_v)
     {
-        $model = new Cita();
+        $cita = new Cita();
+        $locales = Local::findAll(['id_empresa' => Yii::$app->user->id]);
+        $v = Vacante::findOne(["id" => $id_v, "id_empresa" => Yii::$app->user->id]);
+        $va = $v->vacanteAspirantes;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($cita->load(Yii::$app->request->post())) {
+            $va = Yii::$app->request->post('VacanteAspirante')['id_aspirante'];
+            if(is_array($va) && (count($va) <= $v->no_cita || $v->no_cita < 0)) {
+                foreach($va as $i) {
+                    $v->no_cita = $v->no_cita < 0 ? $v->no_cita:($v->no_cita - 1);
+
+                    $i->estado = "aceptada";
+                    $i->save();
+                    $cita->id_va = $i->id;
+                    //  Posible cambio a un unico sql que se ejecute al salir del foreach
+                    $cita->save();
+                }
+                
+                if($v->no_cita >= 0)
+                    $v->save();
+                
+                return $this->redirect(['view', 'id' => $cita->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Excediste el numero de aspirantes que puedes citar');
+            }
         }
+
+        return $this->render('create', [
+            'cita' => $cita,
+            'locales' => $locales,
+            'va' => $va,
+        ]);
     }
 
     /**
@@ -104,17 +127,35 @@ class CitaController extends Controller
      * @param integer $id_empresa
      * @return mixed
      */
-    public function actionUpdate($id, $id_empresa)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($id, $id_empresa);
+        $cita = $this->findModel($id);
+        $locales = Local::findAll(['id_empresa' => Yii::$app->user->id]);
+        $msgError = null;
+        
+        if($cita->idVa->estado == "negada")
+            $msgError = "rechazaste al aspirante";
+        else if($cita->idVa->idVacante->fecha_finalizacion < date('Y-m-d'))
+            $msgError = "la vacante finalizo";
+        else if(preg_match("/^si asistire/i", $cita->respuesta))
+            $msgError = "el aspirante acepto las condiciones de la cita";
+        
+        if($msgError !== null) {
+            Yii::$app->session->setFlash('error', 'La cita no puede ser editada ya que ' . $msgError);
+            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
+        }
+        
+        
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }
+        
+        return $this->render('update', [
+            'cita' => $model,
+            'locales' => $locales,
+            'va' => array($cita->idVa),
+        ]);
     }
 
     /**
@@ -140,8 +181,9 @@ class CitaController extends Controller
      * @return Cita the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id, $id_empresa)
+    protected function findModel($id, $id_empresa = 0)
     {
+        $id_empresa = Yii::$app->user->identity->rol == "empresa" ? Yii::$app->user->id:$id_empresa;
         if (($model = Cita::findOne(['id' => $id, 'id_empresa' => $id_empresa])) !== null) {
             return $model;
         } else {

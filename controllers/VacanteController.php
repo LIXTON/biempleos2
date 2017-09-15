@@ -44,7 +44,15 @@ class VacanteController extends Controller
                     ],
                     [
                         'allow' => true,
+<<<<<<< HEAD
                         'actions' => ['view','indexmovil','index', 'view'],
+=======
+<<<<<<< HEAD
+                        'actions' => ['index', 'view','indexmovil'],
+=======
+                        'actions' => ['view','indexmovil'],
+>>>>>>> b5bdf4bcba173a06a57a2843f25c8d9ef46fe95a
+>>>>>>> dc6dfe034ea4430b557b51c07f09e175c3641c90
                         'roles' => ['@'],
                     ],
                 ],
@@ -99,10 +107,13 @@ class VacanteController extends Controller
     public function actionIndexmovil()
     {
         $dataProvider = new ActiveDataProvider([
+<<<<<<< HEAD
             'query' => Vacante::find()->where(['fecha_finalizacion' => null])->andWhere([':fecha' => date("Y-m-d")]),
+=======
+            'query' => (new \yii\db\Query())->select('`vacante`.id as id, `vacante`.`id_empresa` as id_empresa, `vacante`.`id_local` as id_local, `vacante`.`puesto` as puesto, `vacante`.`sueldo` as sueldo, `vacante`.`ofrece` as ofrece, `vacante`.`requisito` as requisito, `vacante`.`horario` as horario, `vacante`.`fecha_publicacion` as fecha_publicacion, `vacante`.`fecha_finalizacion` as fecha_finalizacion, `vacante`.`no_cita` as no_cita')->from(['vacante', 'vacante_aspirante'])->where('vacante.id <> vacante_aspirante.id_vacante AND vacante_aspirante.id_aspirante = :aspirante AND vacante.fecha_finalizacion <= :fecha', [':aspirante' => 5, ':fecha' => date('Y-m-d H:i:s')])
+>>>>>>> dc6dfe034ea4430b557b51c07f09e175c3641c90
         ]);
-
-        return $this->render('index', [
+        return $this->render('indexmovil', [
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -136,7 +147,8 @@ class VacanteController extends Controller
      * @return mixed
      */
     public function actionView($id, $id_empresa, $id_local)
-    {
+    {$d = (new \yii\db\Query())->select('*')->from(['vacante', 'vacante_aspirante'])->where('vacante.id <> vacante_aspirante.id_vacante AND vacante_aspirante.id_aspirante = :aspirante AND vacante.fecha_finalizacion <= :fecha', [':aspirante' => 5, ':fecha' => date('Y-m-d H:i:s')]);
+
         //  EN ESTA VISTA DEBE AGREGARSE LAS OPCIONES DE CITA DEL ASPIRANTE     //
         return $this->render('view', [
             'model' => $this->findModel($id, $id_empresa, $id_local),
@@ -286,7 +298,7 @@ class VacanteController extends Controller
                 $model = Vacante::findOne(['id' => $id, 'id_empresa' => Yii::$app->user->id, 'id_local' => $id_local]);
                 break;
             case "aspirante":
-                $model = Vacante::find()->where(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local])->andWhere(['not', ['fecha_publicacion' => null]])->one();
+                $model = Vacante::find()->where(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local])->andWhere('fecha_finalizacion >= :fecha', [':fecha' => date('Y:m:d H:i:s')])->one();
                 break;
         }
 

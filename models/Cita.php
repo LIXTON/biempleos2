@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+//  Se utiliza para indicar la relacion con el usuario
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "cita".
@@ -14,6 +16,7 @@ use Yii;
  * @property integer $id_va
  * @property string $fecha
  * @property string $mensaje
+ * @property string $respuesta
  *
  * @property Empresa $idEmpresa
  * @property Local $idLocal
@@ -28,6 +31,20 @@ class Cita extends \yii\db\ActiveRecord
     {
         return 'cita';
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'id_empresa',
+                'updatedByAttribute' => false,
+            ]
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -35,12 +52,12 @@ class Cita extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_empresa', 'id_va', 'fecha', 'mensaje'], 'required'],
+            [['id_va', 'fecha', 'mensaje'], 'required'],
             [['id_empresa', 'id_local', 'id_va'], 'integer'],
             [['fecha'], 'safe'],
             [['mensaje'], 'string'],
+            [['respuesta'], 'string', 'max' => 100],
             [['direccion'], 'string', 'max' => 255],
-            [['id_empresa'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_empresa' => 'id_usuario']],
             [['id_local'], 'exist', 'skipOnError' => true, 'targetClass' => Local::className(), 'targetAttribute' => ['id_local' => 'id']],
             [['id_va'], 'exist', 'skipOnError' => true, 'targetClass' => VacanteAspirante::className(), 'targetAttribute' => ['id_va' => 'id']],
         ];

@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 ],
                 'urlCreator' => function ($action, $model, $key, $index, $this) {
-                    return $action . "?id=" .  $model->id . "&id_empresa=" .  $model->id_empresa . "&id_local=" .  $model->id_local;
+                    return $action . "?id=" .  $model['id'] . "&id_empresa=" .  $model['id_empresa'] . "&id_local=" .  $model['id_local'];
                 }
             ],
         ],

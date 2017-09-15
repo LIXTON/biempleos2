@@ -18,6 +18,7 @@ use app\models\Solicitud;
 use app\models\Empresa;
 use app\models\EmpresaPaquete;
 use app\models\Paquete;
+use app\components\AccessRule;
 
 /**
  * Site controller
@@ -33,23 +34,26 @@ class SiteController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['logout', 'signupw', 'signupm', 'chgpassword'],
+                // Se crea un nuevo AccessRule para lidiar con los roles //
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
                 'rules' => [
                     [
                         'actions' => ['signupw', 'signupm'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
-                    // se agrego el codigo de las rules, no funciona hasta que no tenga el custom rule que se creo
-                    // pd. el custom rule que se creo tiene bug, mayor referencia ver documento SolicitudController.php
+                    [
+                        'actions' => ['logout', 'chgpassword', 'movilmenu'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    // se agrego el codigo de las rules
                     [
                         'allow' => true,
                         'actions' => ['movilmenu'],
                         'roles' => ['aspirante'],
-                    ],
-                    [
-                        'actions' => ['logout', 'chgpassword'],
-                        'allow' => true,
-                        'roles' => ['@'],
                     ],
                 ],
             ],

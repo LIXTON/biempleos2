@@ -14,7 +14,7 @@ use yii\helpers\Html;
 		echo "<h1>Panel de usuario</h1>";
 		echo "<p>Hola, " . $data["nombre"] . " tus opciones disponibles son: </p>";
 		echo Html::a('<h2>Editar Solicitud</h2>', ['solicitud/update']) . "<br>";
-		echo Html::a('<h2>Ver notificaciones</h2>', ['vacante-aspirante/index']) . "<br>";
+		echo Html::a('<h2>Ver notificaciones</h2>', ['vacante-aspirante/indexmovil']) . "<br>";
 		echo Html::a('<h2>¿Buscas empleo?</h2>', ['vacante/indexmovil']) . "<br>";
 	}
 ?>
