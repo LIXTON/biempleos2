@@ -146,7 +146,7 @@ class VacanteAspiranteController extends Controller
         $model->id_vacante = Yii::$app->request->post('id');
 
         if ($model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['indexmovil']);
         }
         
         return $this->render('create', [
