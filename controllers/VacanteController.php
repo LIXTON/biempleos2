@@ -44,7 +44,19 @@ class VacanteController extends Controller
                     ],
                     [
                         'allow' => true,
+<<<<<<< HEAD
                         'actions' => ['index', 'view','indexmovil'],
+=======
+<<<<<<< HEAD
+                        'actions' => ['view','indexmovil','index', 'view'],
+=======
+<<<<<<< HEAD
+                        'actions' => ['index', 'view','indexmovil'],
+=======
+                        'actions' => ['view','indexmovil'],
+>>>>>>> b5bdf4bcba173a06a57a2843f25c8d9ef46fe95a
+>>>>>>> dc6dfe034ea4430b557b51c07f09e175c3641c90
+>>>>>>> f9e8de3c462f7f2c647549e45409c71a1a7257b1
                         'roles' => ['@'],
                     ],
                 ],
@@ -99,12 +111,20 @@ class VacanteController extends Controller
     public function actionIndexmovil()
     {
         $dataProvider = new ActiveDataProvider([
+<<<<<<< HEAD
             'query' => (new \yii\db\Query())->
             select('vacante.id, vacante.id_empresa, vacante.id_local, vacante.puesto, vacante.sueldo, vacante.horario')->
             from(['vacante'])->
             leftJoin('vacante_aspirante', 'vacante_aspirante.id_vacante = vacante.id')->
             where('vacante_aspirante.id_aspirante <> :aspirante OR vacante_aspirante.id_aspirante IS NULL', [':aspirante' => Yii::$app->user->id])
 
+=======
+<<<<<<< HEAD
+            'query' => Vacante::find()->where(['fecha_finalizacion' => null])->andWhere([':fecha' => date("Y-m-d")]),
+=======
+            'query' => (new \yii\db\Query())->select('`vacante`.id as id, `vacante`.`id_empresa` as id_empresa, `vacante`.`id_local` as id_local, `vacante`.`puesto` as puesto, `vacante`.`sueldo` as sueldo, `vacante`.`ofrece` as ofrece, `vacante`.`requisito` as requisito, `vacante`.`horario` as horario, `vacante`.`fecha_publicacion` as fecha_publicacion, `vacante`.`fecha_finalizacion` as fecha_finalizacion, `vacante`.`no_cita` as no_cita')->from(['vacante', 'vacante_aspirante'])->where('vacante.id <> vacante_aspirante.id_vacante AND vacante_aspirante.id_aspirante = :aspirante AND vacante.fecha_finalizacion <= :fecha', [':aspirante' => 5, ':fecha' => date('Y-m-d H:i:s')])
+>>>>>>> dc6dfe034ea4430b557b51c07f09e175c3641c90
+>>>>>>> f9e8de3c462f7f2c647549e45409c71a1a7257b1
         ]);
         return $this->render('indexmovil', [
             'dataProvider' => $dataProvider,
