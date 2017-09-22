@@ -23,15 +23,20 @@ use yii\widgets\ActiveForm;
             <?= $form->field($model, 'fecha_nacimiento')->textInput() ?>
 
             <?= $form->field($model, 'sexo')->dropDownList(["1"=>"hombre","2"=>"mujer"]) ?>
+            <?= $form->field($model, 'nacionalidad')->dropDownList(["1"=>"MX","2"=>"US"]) ?>
 
-            <?= $form->field($model, 'sexo')->textInput() ?>
-            <?= $form->field($model, 'nacionalidad')->textInput() ?>
             <?= $form->field($model, 'estatura')->textInput() ?>
             <?= $form->field($model, 'peso')->textInput() ?>
-            <?= $form->field($model, 'estado_civil')->textInput() ?>
+            <?= $form->field($model, 'estado_civil')->dropDownList([
+                                                        "1"=>"Soltero/a",
+                                                        "2"=>"Comprometido/a",
+                                                        "3"=>"Casado/a",
+                                                        "4"=>"Divorciado/a",
+                                                        "5"=>"Viudo/a"
+                                                    ]) ?>
         </div>
         <div class="col-md-6">
-            <h2>Datos de identidad:</h2>
+            <h2>Documentación:</h2>
             <?= $form->field($model, 'curp')->textInput() ?>
             <?= $form->field($model, 'rfc')->textInput() ?>
             <?= $form->field($model, 'nss')->textInput() ?>
@@ -54,25 +59,21 @@ use yii\widgets\ActiveForm;
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h2>Datos de identidad:</h2>
-            <?= $form->field($model, 'deportista')->textInput() ?>
+            <h2>Habitos personales:</h2>
+            <?= $form->field($model, 'deportista')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
             <?= $form->field($model, 'deporte')->textInput() ?>
-            <?= $form->field($model, 'club')->textInput() ?>
+            <?= $form->field($model, 'club')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
             <?= $form->field($model, 'pasatiempo')->textInput() ?>
             <?= $form->field($model, 'meta')->textInput() ?>
         </div>
         <div class="col-md-6">
             <h2>Datos Escolares:</h2>
-            <?= $form->field($model, 'estudio')->textInput() ?>
+            <?= $form->field($model, 'estudio')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
             <?= $form->field($model, 'escuela')->textInput() ?>
             <?= $form->field($model, 'inicio')->textInput() ?>
             <?= $form->field($model, 'finalizacion')->textInput() ?>
             <?= $form->field($model, 'titulo')->textInput() ?>    
         </div>
-    </div>
-    
-    <div class="row">
-        
     </div>
 
     <div class="row">
@@ -107,31 +108,31 @@ use yii\widgets\ActiveForm;
 
     <div class="row">
         <div class="col-md-6">
-            <h2>Otros datos:</h2>
-            <?= $form->field($model, 'afianzado')->textInput() ?>
-            <?= $form->field($model, 'sindicato')->textInput() ?>
-            <?= $form->field($model, 'seguro_vida')->textInput() ?>
-            <?= $form->field($model, 'viajar')->textInput() ?>
-            <?= $form->field($model, 'cambiar_residencia')->textInput() ?>
-            <?= $form->field($model, 'otros_ingresos')->textInput() ?>
+            <h2>Datos económicos:</h2>
+            <?= $form->field($model, 'afianzado')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
+            <?= $form->field($model, 'sindicato')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
+            <?= $form->field($model, 'seguro_vida')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
+            <?= $form->field($model, 'viajar')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
+            <?= $form->field($model, 'cambiar_residencia')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
+            <?= $form->field($model, 'otros_ingresos')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
             <?= $form->field($model, 'importe_ingresos')->textInput() ?>
-            <?= $form->field($model, 'conyuge_trabaja')->textInput() ?>
+            <?= $form->field($model, 'conyuge_trabaja')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
             <?= $form->field($model, 'percepcion')->textInput() ?>
-            <?= $form->field($model, 'casa_propia')->textInput() ?>
+            <?= $form->field($model, 'casa_propia')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
             <?= $form->field($model, 'valor_casa')->textInput() ?>
-            <?= $form->field($model, 'paga_renta')->textInput() ?>
+            <?= $form->field($model, 'paga_renta')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
             <?= $form->field($model, 'renta')->textInput() ?>
-            <?= $form->field($model, 'dependientes')->textInput() ?>
-            <?= $form->field($model, 'automovil')->textInput() ?>
-            <?= $form->field($model, 'deudas')->textInput() ?>
+            <?= $form->field($model, 'dependientes')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
+            <?= $form->field($model, 'automovil')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
+            <?= $form->field($model, 'deudas')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
             <?= $form->field($model, 'importe_deudas')->textInput() ?>
-            <?= $form->field($model, 'acreedor')->textInput() ?>
+            <?= $form->field($model, 'acreedor')->dropDownList(["1"=>"Simon", "2"=>"ni maiz"]) ?>
             <?= $form->field($model, 'abono_mensual')->textInput() ?>
             <?= $form->field($model, 'gastos_mensuales')->textInput() ?>
         </div>
 
         <div class="col-md-6">
-            <h2>Dominío en otras áreas:</h2>
+            <h2>Conocimientos generales:</h2>
             <?= $form->field($model, 'idioma')->textInput() ?>
             <?= $form->field($model, 'porcentaje')->textInput() ?>
             <?= $form->field($model, 'funciones_oficina')->textInput() ?>

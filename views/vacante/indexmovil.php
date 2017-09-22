@@ -25,24 +25,17 @@ $this->params['breadcrumbs'][] = $this->title;
         }
         ?>
     </p>
-    <?php Pjax::begin(); ?>    
+
+    <?php Pjax::begin(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            // 'id',
+            'id',
             'id_empresa',
             'id_local',
             'puesto',
             'sueldo',
-            // 'ofrece:ntext',
-            // 'requisito:ntext',
             'horario',
-            'fecha_publicacion',
-            // 'fecha_finalizacion',
-            'no_cita',
-
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => Yii::$app->user->identity->rol == "empresa" ? '{view} {update} {delete} {lista}':'{view}',

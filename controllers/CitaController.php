@@ -40,6 +40,12 @@ class CitaController extends Controller
                         'actions' => ['create', 'update'], 
                         'roles' => ['empresa'],
                     ],
+                    // se agregaron permisos para aspirante
+                    [
+                        'allow' => true, 
+                        'actions' => ['viewmovil','updateestado'], 
+                        'roles' => ['aspirante'],
+                    ],
                 ],
             ], 
             'verbs' => [
@@ -78,6 +84,37 @@ class CitaController extends Controller
             'model' => $this->findModel($id, $id_empresa),
         ]);
     }
+
+    /**
+     * Displays a single Cita model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionViewmovil($id){
+        $model = Cita::findOne(["id_va"=>$id]);
+        if($model){
+            return $this->render('viewmovil', ['model' => $model]);
+        }
+        else{
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    public function actionUpdateestado($id,$respuesta){
+        $model = Cita::findOne(["id_va"=>$id]);
+        if($model){
+            $model->respuesta = $respuesta;
+            if($model->save()){
+                return $this->render('viewmovil', ['model' => $model]);
+            }
+            
+        }
+        else{
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+
 
     /**
      * Creates a new Cita model.

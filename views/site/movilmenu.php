@@ -11,9 +11,11 @@ use yii\helpers\Html;
 	}
 	else{
 		// si existe solicitud muestra las opciones disponibles //
+		echo Html::img('@web/images/test.jpeg');
 		echo "<h1>Panel de usuario</h1>";
 		echo "<p>Hola, " . $data["nombre"] . " tus opciones disponibles son: </p>";
 		echo Html::a('<h2>Editar Solicitud</h2>', ['solicitud/update']) . "<br>";
+		echo Html::a('<h2>Actualizar Imagen</h2>', ['solicitud/updateimg']) . "<br>";
 		echo Html::a('<h2>Ver notificaciones</h2>', ['vacante-aspirante/indexmovil']) . "<br>";
 		echo Html::a('<h2>¿Buscas empleo?</h2>', ['vacante/indexmovil']) . "<br>";
 	}
