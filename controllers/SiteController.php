@@ -377,4 +377,11 @@ class SiteController extends Controller
             'chgPassword' => $chgPassword,
         ]);
     }
+    
+    public function actionPdf($idv, $ids) {
+        $vacante = \app\models\Vacante::findOne($idv);
+        $solicitud = \app\models\Solicitud::findOne(['id_aspirante' => $ids]);
+        $pdf = new \app\components\SolicitudPDF($vacante, $solicitud);
+        $pdf->getPDFAspirante();
+    }
 }

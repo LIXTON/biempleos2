@@ -44,15 +44,7 @@ class VacanteController extends Controller
                     ],
                     [
                         'allow' => true,
-<<<<<<< HEAD
-                        'actions' => ['view','indexmovil','index', 'view'],
-=======
-<<<<<<< HEAD
                         'actions' => ['index', 'view','indexmovil'],
-=======
-                        'actions' => ['view','indexmovil'],
->>>>>>> b5bdf4bcba173a06a57a2843f25c8d9ef46fe95a
->>>>>>> dc6dfe034ea4430b557b51c07f09e175c3641c90
                         'roles' => ['@'],
                     ],
                 ],
