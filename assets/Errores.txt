@@ -2,7 +2,7 @@ Bugs:
  [x] Documento SQL, linea 23:
 	Original: DROP DATABASE IF NOT EXISTS `biempleos2`;
 	Cambio: DROP DATABASE IF EXISTS `biempleos2`;
- [ ] El custom rule no funciona en Site/movilmenu:
+ [x] El custom rule no funciona en Site/movilmenu:
 	Comentarios: Mirar linea 52 de SiteController
  [x] No hay Link de signup
 	Comentarios: Agrege los links a los singup, ver linea 48 y 49 de View/site/login

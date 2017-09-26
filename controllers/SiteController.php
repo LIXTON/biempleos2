@@ -45,7 +45,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout', 'chgpassword', 'movilmenu'],
+                        'actions' => ['logout', 'chgpassword'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
