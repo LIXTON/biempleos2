@@ -117,7 +117,7 @@ class VacanteAspiranteController extends Controller
             'query' => VacanteAspirante::find(["id_aspirante"=> Yii::$app->user->id]),
         ]);
 
-        return $this->render('index', [
+        return $this->render('indexmovil', [
             'dataProvider' => $dataProvider,
         ]);
     }

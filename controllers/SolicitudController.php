@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 // se agrego access control
 use yii\filters\AccessControl;
@@ -34,7 +35,7 @@ class SolicitudController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['create', 'update'],
+                        'actions' => ['create', 'update','updateimg'],
                         'roles' => ['aspirante'],
                     ],
                     [
@@ -118,6 +119,24 @@ class SolicitudController extends Controller
             return $this->render('update', [
                 'model' => $model,
             ]);
+        }
+    }
+
+    public function actionUpdateimg(){
+        $id_usuario = Yii::$app->user->id;
+        $model = Solicitud::findOne($id_usuario);
+        if(isset($_FILES["img"]["name"])){
+            $ruta = Yii::$app->basePath . "\\web\\images\\";
+            $nombreimg = "user " . $id_usuario . " " . $_FILES["img"]["name"];
+
+            $model->foto = $nombreimg;
+            if($model->save()){
+                copy($_FILES["img"]["tmp_name"], $ruta . $nombreimg);
+                return $this->redirect(['//site/movilmenu']);
+            }
+        }
+        else{
+            return $this->render("updateimg",["model"=>$model]);
         }
     }
 
