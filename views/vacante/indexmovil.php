@@ -38,11 +38,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'horario',
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => Yii::$app->user->identity->rol == "empresa" ? '{view} {update} {delete} {lista}':'{view}',
+                'template' => '{aplicar} {view}',
                 'buttons' => [
-                    'lista' => function ($url, $model, $key) {
-                        return Html::a('<span class=\'glyphicon glyphicon-th-list\'></span>', $url);
-                                      //['vacante-aspirante/index', 'id_vacante' => $model->id]);
+                    'aplicar' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<span class=\'glyphicon glyphicon-plus\'></span>', 
+                            ['vacante-aspirante/create'], 
+                            [
+                                'data' => [
+                                    'method' => 'post',
+                                    'params' => ['id' => $model->id]
+                                ]
+                            ]
+                        );
                     }
                 ],
                 'urlCreator' => function ($action, $model, $key, $index, $this) {

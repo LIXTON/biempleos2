@@ -14,6 +14,10 @@ use app\components\AccessRule;
 //  Se utiliza en caso de errores de datos introducidos o bien          //
 //  alteracion de datos                                                 //
 use yii\web\BadRequestHttpException;
+//  Se usa lo siguiente para el pdf                                     //
+use app\models\Solicitud;
+use app\models\Vacante;
+use app\components\SolicitudPDF;
 
 /**
  * VacanteAspiranteController implements the CRUD actions for VacanteAspirante model.
@@ -40,7 +44,7 @@ class VacanteAspiranteController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['index', 'view-aspirante'],
                         'roles' => ['empresa'],
                     ],
                     [
@@ -65,48 +69,34 @@ class VacanteAspiranteController extends Controller
      */
     public function actionIndex()
     {
-        $query = (new \yii\db\Query());
-        //  Empresa: SELECT * FROM `vacante`, `vacante_aspirante` WHERE `vacante`.id != `vacante_aspirante`.id_vacante AND `vacante_aspirante`.`id_aspirante` = 5 AND `vacante`.`fecha_finalizacion` <= CURRENT_TIMESTAMP,
-        //  El query devuelve todos los aspirantes que aplicaron a la vacante
-        //
-        //  Aspirante:(new \yii\db\Query())->select('*')->from(['vacante', 'vacante_aspirante'])->where('vacante.id <> vacante_aspirante.id_vacante AND vacante_aspirante.id_aspirante = :aspirante AND vacante.fecha_finalizacion <= :fecha', [':aspirante' => 5, ':fecha' => date('Y-m-d H:i:s')]);
-        //  El query devuelve todas las vacantes que aplico y que siguen activas
-        switch(Yii::$app->user->identity->rol) {
-            case "empresa":
-                if (!Yii::$app->request->get('id_vacante'))
-                    throw new BadRequestHttpException('ID Vacante is required in the url');
-                
-                $query = $query->select([
-                    'id' => 'vacante_aspirante.id',
-                    'id_aspirante' => 'vacante_aspirante.id_aspirante',
-                    'aspirante' => 'solicitud.nombre',
-                    'fecha' => 'vacante_aspirante.fecha_cambio_estado'
-                ])
-                    ->from('vacante_aspirante')
-                    ->innerJoin('aspirante', 'aspirante.id_usuario = vacante_aspirante.id_aspirante')
-                    ->innerJoin('solicitud', 'solicitud.id_aspirante = aspirante.id_usuario')
-                    ->where('vacante_aspirante.estado = :estado AND vacante_aspirante.id_vacante = :vacante', [':estado' => 'pendiente', ':vacante' => Yii::$app->request->get('id_vacante')]);
-                break;
-            case "aspirante":
-                //  Es posible que esto truene
-                $query = $query->select([
-                    'id' => 'vacante_aspirante.id',
-                    'id_vacante' => 'vacante.id',
-                    'puesto' => 'vacante.puesto',
-                    'estado' => 'vacante_aspirante.estado',
-                    'fecha' => 'vacante_aspirante.fecha_cambio_estado'
-                ])
-                    ->innerJoin('vacante', 'vacante.id = vacante_aspirante.id_vacante')
-                    ->where('vacante_aspirante.id_aspirante = :aspirante AND vacante.fecha_finalizacion >= :fecha', [':aspirante' => Yii::$app->user->id, ':fecha' => date("Y-m-d")]);
-                break;
-        }
+        /*
+        SELECT solicitud.nombre, vacante_aspirante.fecha_cambio_estado
+FROM aspirante
+INNER JOIN solicitud ON solicitud.id_aspirante = aspirante.id_usuario
+INNER JOIN vacante_aspirante ON vacante_aspirante.id_aspirante = aspirante.id_usuario
+INNER JOIN vacante ON vacante_aspirante.id_vacante = vacante.id
+WHERE vacante.fecha_publicacion IS NOT NULL
+AND vacante.fecha_finalizacion <= hoy
+AND vacante.id_empresa = 2
+AND vacante_aspirante.estado = 'pendiente';
+        */
+        $query = (new \yii\db\Query())->select([
+            'id' => 'vacante_aspirante.id',
+            'aspirante' => 'solicitud.nombre',
+            'fecha' => 'vacante_aspirante.fecha_cambio_estado'
+        ])
+            ->from('aspirante')
+            ->innerJoin('solicitud', 'solicitud.id_aspirante = aspirante.id_usuario')
+            ->innerJoin('vacante_aspirante', 'vacante_aspirante.id_aspirante = aspirante.id_usuario')
+            ->innerJoin('vacante', 'vacante.id = vacante_aspirante.id_vacante')
+            ->where('vacante_aspirante.estado = :estado', [':estado' => 'pendiente'])
+            ->andWhere('vacante.fecha_publicacion IS NOT NULL')
+            ->andWhere('vacante.fecha_finalizacion >= :fecha', [':fecha' => date('Y-m-d')])
+            ->andWhere('vacante.id_empresa = :empresa', [':empresa' => Yii::$app->user->id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-        
-        print_r($dataProvider->getKeys());
-        die();
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -138,6 +128,20 @@ class VacanteAspiranteController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+    
+    /**
+     * Displays a single VacanteAspirante model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionViewAspirante($id)
+    {
+        $va = $this->findModel($id);
+        return $this->render('view', [
+            'model' => $va,
+            'solicitud' => Solicitud::findOne(['id_aspirante' => $va->id_aspirante]),
+        ]);
+    }
 
     /**
      * Creates a new VacanteAspirante model.
@@ -157,6 +161,21 @@ class VacanteAspiranteController extends Controller
         return $this->render('create', [
             'model' => $model,
         ]);
+    }
+    
+    /**
+     * Creates a new VacanteAspirante model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionDescargar($id)
+    {
+        $va = $this->findModel($id);
+        $vacante = Vacante::findOne($va->id_vacante);
+        $solicitud = Solicitud::findOne(['id_aspirante' => $va->id_aspirante]);
+        
+        $pdf = new SolicitudPDF($vacante, $solicitud);
+        $pdf->getPDFAspirante();
     }
 
     /**

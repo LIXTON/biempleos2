@@ -14,16 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?php
-        switch(Yii::$app->user->identity->rol) {
-            case "empresa":
-                echo Html::a(Yii::t('app', 'Crear Vacante'), ['create'], ['class' => 'btn btn-success']);
-                break;
-            case "aspirante":
-                //  Opciones aspirante
-                break;
-        }
-        ?>
+        <?= Html::a(Yii::t('app', 'Crear Vacante'), ['create'], ['class' => 'btn btn-success']); ?>
     </p>
     <?php Pjax::begin(); ?>    
     <?= GridView::widget([
@@ -45,11 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => Yii::$app->user->identity->rol == "empresa" ? '{view} {update} {delete} {lista}':'{view}',
+                'template' => '{view} {update} {lista}',
                 'buttons' => [
                     'lista' => function ($url, $model, $key) {
-                        return Html::a('<span class=\'glyphicon glyphicon-th-list\'></span>', $url);
-                                      //['vacante-aspirante/index', 'id_vacante' => $model->id]);
+                        return Html::a('<span class=\'glyphicon glyphicon-th-list\'></span>', ['vacante-aspirante/index', 'id_vacante' => $model->id]);
                     }
                 ],
                 'urlCreator' => function ($action, $model, $key, $index, $this) {

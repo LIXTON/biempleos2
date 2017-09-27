@@ -13,21 +13,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Vacante Aspirante'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-<?php Pjax::begin(); ?>    <?= GridView::widget([
+<?php Pjax::begin(); ?>
+    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'id_aspirante',
-            'id_vacante',
-            'estado',
-            'fecha_cambio_estado',
+            'aspirante',
+            'fecha',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}',
+                'buttons' => [
+                    /*'lista' => function ($url, $model, $key) {
+                        return Html::a('<span class=\'glyphicon glyphicon-th-list\'></span>', ['vacante-aspirante/index', 'id_vacante' => $model->id]);
+                    }*/
+                ],
+                'urlCreator' => function ($action, $model, $key, $index, $this) {
+                    return $action . "?id=" . $model['id'];
+                }
+            ],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>

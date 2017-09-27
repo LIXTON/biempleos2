@@ -294,7 +294,7 @@ class VacanteController extends Controller
                 $model = Vacante::findOne(['id' => $id, 'id_empresa' => Yii::$app->user->id, 'id_local' => $id_local]);
                 break;
             case "aspirante":
-                $model = Vacante::find()->where(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local])->andWhere('fecha_finalizacion <= :fecha', [':fecha' => date('Y:m:d H:i:s')])->one();
+                $model = Vacante::find()->where(['id' => $id, 'id_empresa' => $id_empresa, 'id_local' => $id_local])->andWhere('fecha_finalizacion <= :fecha', [':fecha' => date('Y-m-d H:i:s')])->one();
                 break;
         }
 
