@@ -35,12 +35,17 @@ class VacanteAspiranteController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['create'],
+                        'actions' => ['create', 'indexmovil'],
                         'roles' => ['aspirante'],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view', 'indexmovil'],
+                        'actions' => ['index'],
+                        'roles' => ['empresa'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
                         'roles' => ['@'],
                     ],
                 ],

@@ -39,12 +39,17 @@ class VacanteController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['create', 'update', 'historial'],
+                        'actions' => ['create', 'update', 'historial', 'index'],
                         'roles' => ['empresa'],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view','indexmovil'],
+                        'actions' => ['indexmovil'],
+                        'roles' => ['aspirante'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
                         'roles' => ['@'],
                     ],
                 ],
