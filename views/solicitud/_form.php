@@ -68,17 +68,23 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'meta')->textarea(['rows' => 6]) ?>
 
+    <?= $form->field($model, 'padre_nombre')->textarea(['rows' => 6]) ?>
+
     <?= $form->field($model, 'padre_vivefin')->textInput() ?>
 
     <?= $form->field($model, 'padre_domicilio')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'padre_ocupacion')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'madre_nombre')->textarea(['rows' => 6]) ?>
+
     <?= $form->field($model, 'madre_vivefin')->textInput() ?>
 
     <?= $form->field($model, 'madre_domicilio')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'madre_ocupacion')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'pareja_nombre')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'pareja_vivefin')->textInput() ?>
 

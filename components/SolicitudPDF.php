@@ -256,6 +256,7 @@ class SolicitudPDF extends TCPDF {
         $edad = ((date("md", date("U", mktime(0, 0, 0, $fechaNacimiento[1], $fechaNacimiento[2], $fechaNacimiento[0]))) > date("md")
                  ? ((date("Y") - $fechaNacimiento[0]) - 1) : (date("Y") - $fechaNacimiento[0]))) . " años";
         $fechaNacimiento = $fechaNacimiento[2] . "/" . $fechaNacimiento[1] . "/" . $fechaNacimiento[0];
+        $informe = $this->solicitud->solicitud_informe ? 'Autorizado':'Negado';
         
         // Conjunto de tamaños de altura que representan los textos para cada cuadro
         // divididos por los cuadros grandes y por las filas que ocupan
@@ -301,10 +302,18 @@ class SolicitudPDF extends TCPDF {
                 ),
                 '4' => array(
                     $this->getStringHeight(
-                        160, $fechaNacimiento, false, true, '', array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell)
+                        120, $fechaNacimiento, false, true, '', array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell)
                     ),
                     $this->getStringHeight(
-                        73, $this->solicitud->dependientes, false, true, '', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell)
+                        243, $this->solicitud->lugar_nacimiento, false, true, '', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell)
+                    )
+                ),
+                '6' => array(
+                    $this->getStringHeight(
+                        181, $this->solicitud->vive_con, false, true, '', array('LB' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        182, $this->solicitud->dependientes, false, true, '', array('RB' => $borderStyleOuterCell)
                     )
                 )
             ),
@@ -349,11 +358,55 @@ class SolicitudPDF extends TCPDF {
                 ),
                 'sub1' => array(
                     'subcolumna1' => $this->getStringHeight(
-                        240, $this->solicitud->puesto_jefe, array('LB' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell)
+                        240, $informe, array('LB' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell)
                     ),
                     'subcolumna2' => $this->getStringHeight(
                         123, $this->solicitud->motivo_separacion, array('RB' => $borderStyleOuterCell)
                     )
+                )
+            ),
+            'datosFamiliares' => array(
+                '1' => array(
+                    $this->getStringHeight(
+                        170, $this->solicitud->padre_nombre, array('RB' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        60, $this->solicitud->padre_vivefin ? "Vivo":"Finado", array('RB' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        165, $this->solicitud->padre_domicilio, array('RB' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        110, $this->solicitud->padre_ocupacion, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell)
+                    ),
+                ),
+                '2' => array(
+                    $this->getStringHeight(
+                        170, $this->solicitud->madre_nombre, array('RB' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        60, $this->solicitud->madre_vivefin ? "Vivo":"Finado", array('RB' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        165, $this->solicitud->madre_domicilio, array('RB' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        110, $this->solicitud->madre_ocupacion, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell)
+                    ),
+                ),
+                '3' => array(
+                    $this->getStringHeight(
+                        170, $this->solicitud->pareja_nombre, array('RB' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        60, $this->solicitud->pareja_vivefin ? "Vivo":"Finado", array('RB' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        165, $this->solicitud->pareja_domicilio, array('RB' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        110, $this->solicitud->pareja_ocupacion, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell)
+                    ),
                 )
             ),
             'referenciasPersonales' => array(
@@ -407,7 +460,25 @@ class SolicitudPDF extends TCPDF {
                     $this->getStringHeight(
                         65, $this->solicitud->tiempo_ref3, array('RB' => $borderStyleOuterCell)
                     ),
+                )
+            ),
+            'datosEconomicos' => array(
+                '6' => array(
+                    $this->getStringHeight(
+                        310, 'Endeudado con ' . $this->solicitud->acreedor, array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        100, $this->solicitud->importe_deudas, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell)
+                    ),
                 ),
+                '7' => array(
+                    $this->getStringHeight(
+                        205, '$' . $this->solicitud->abono_mensual, array('LB' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell)
+                    ),
+                    $this->getStringHeight(
+                        205, '$' . $this->solicitud->gastos_mensuales, array('RB' => $borderStyleOuterCell)
+                    ),
+                )
             )
         );
         
@@ -498,16 +569,35 @@ class SolicitudPDF extends TCPDF {
         
         $this->SetFontSize(10);
         $this->Cell(120, 14, 'Fecha de Nacimiento', array('L' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell));
-        $this->Cell(243, 14, 'Dependientes', array('R' => $borderStyleOuterCell), 1);
+        $this->Cell(243, 14, 'Lugar de Nacimiento', array('R' => $borderStyleOuterCell), 1);
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(12);
         $height = $commonHeight('datosPersonales', '4');
         
         $this->MultiCell(120, $height, $fechaNacimiento, array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell), 'L', false, 0);
-        $this->MultiCell(243, $height, $this->solicitud->dependientes, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
-        $this->SetXY($this->getDestination()['columna2']['x'], $this->GetY() + 5);
+        $this->MultiCell(243, $height, $this->solicitud->lugar_nacimiento, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        $this->SetX($this->getDestination()['columna2']['x']);
         
+        $this->SetFontSize(10);
+        $this->Cell(363, 14, 'Lugar de residencia', array('LR' => $borderStyleOuterCell), 1);
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(12);
+        $this->MultiCell(363, 0, $this->solicitud->lugar_residencia, array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(10);
+        $this->Cell(181, 14, 'Vive con', array('L' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell));
+        $this->Cell(182, 14, 'Dependientes', array('R' => $borderStyleOuterCell), 1);
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $height = $commonHeight('datosPersonales', '6');
+        
+        $this->SetFontSize(12);
+        $this->MultiCell(181, $height, $this->solicitud->vive_con, array('LB' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(182, $height, $this->solicitud->dependientes, array('RB' => $borderStyleOuterCell), 'L');
+        $this->SetXY($this->getDestination()['columna2']['x'], $this->GetY() + 5);
         
         
         // ---------------------------------------------------------
@@ -654,13 +744,22 @@ class SolicitudPDF extends TCPDF {
             $this->SetFontSize(10);
             $this->Cell(240, 14, 'Puesto del jefe directo', array('L' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell), 1);
             $this->SetX($this->getDestination()['columna2']['x']);
-            // Se guarda la ubicacion de la columna independiente puesto del jefe directo
+            
+            $this->SetFontSize(12);
+            $this->MultiCell(240, 20, $this->solicitud->puesto_jefe, array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell), 'L');
+            $this->SetX($this->getDestination()['columna2']['x']);
+            
+            $this->SetFontSize(10);
+            $this->Cell(240, 14, 'Autorizacion de Solicitud de Informes', array('L' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell), 1);
+            $this->SetX($this->getDestination()['columna2']['x']);
+            
+            // Se guarda la ubicacion de la columna independiente solicitud_informe
             $this->setDestination('subcolumna1', $this->GetY(), '', $this->GetX());
             
             $this->SetFontSize(12);
             $height = $adjustableHeight('empleo', 'sub1');
             
-            $this->MultiCell(240, $height[0], $this->solicitud->puesto_jefe, array('LB' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell), 'L');
+            $this->MultiCell(240, $height[0], $informe, array('LB' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell), 'L');
             
             $this->SetXY($this->getDestination()['subcolumna2']['x'], $this->getDestination()['subcolumna2']['y']);
             $this->MultiCell(123, $height[1], $this->solicitud->motivo_separacion, array('RB' => $borderStyleOuterCell), 'L');
@@ -725,6 +824,50 @@ class SolicitudPDF extends TCPDF {
         
         $this->setDestination('columna1', $this->getDestination()['columna1']['y'] + 5, '');
         $this->SetXY($this->getDestination()['columna1']['x'], $this->getDestination()['columna1']['y']);
+        
+        
+        
+        // ---------------------------------------------------------
+        //  CUADRO GRANDE DE DATOS FAMILIARES
+        // ---------------------------------------------------------
+        $this->SetFont('helvetica', 'B', 14);
+        $this->Cell(555, 20, 'Datos Familiares', array('LRTB' => $borderStyleOuterCell), 1, 'C');
+        
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(50, 14, '', array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell));
+        $this->Cell(170, 14, 'Nombre', array('RB' => $borderStyleInnerCell));
+        $this->Cell(60, 14, 'Vivo/Finado', array('RB' => $borderStyleInnerCell));
+        $this->Cell(165, 14, 'Domicilio', array('RB' => $borderStyleInnerCell));
+        $this->Cell(110, 14, 'Ocupación', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
+        
+        $this->SetFontSize(12);
+        $height = $commonHeight('datosFamiliares', '1');
+        
+        $this->Cell(50, $height, 'Padre', array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell));
+        $this->MultiCell(170, $height, $this->solicitud->padre_nombre, array('RB' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(60, $height, $this->solicitud->padre_vivefin ? "Vivo":"Finado", array('RB' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(165, $height, $this->solicitud->padre_domicilio, array('RB' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(110, $height, $this->solicitud->padre_ocupacion, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        
+        $this->SetFontSize(12);
+        $height = $commonHeight('datosFamiliares', '2');
+        
+        $this->Cell(50, $height, 'Madre', array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell));
+        $this->MultiCell(170, $height, $this->solicitud->madre_nombre, array('RB' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(60, $height, $this->solicitud->madre_vivefin ? "Vivo":"Finado", array('RB' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(165, $height, $this->solicitud->madre_domicilio, array('RB' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(110, $height, $this->solicitud->madre_ocupacion, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        
+        $this->SetFontSize(12);
+        $height = $commonHeight('datosFamiliares', '3');
+        
+        $this->Cell(50, $height, 'Pareja', array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell));
+        $this->MultiCell(170, $height, $this->solicitud->pareja_nombre, array('RB' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(60, $height, $this->solicitud->pareja_vivefin ? "Vivo":"Finado", array('RB' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(165, $height, $this->solicitud->pareja_domicilio, array('RB' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(110, $height, $this->solicitud->pareja_ocupacion, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        
+        $this->SetY($this->GetY() + 5);
         
         
         
@@ -883,28 +1026,26 @@ class SolicitudPDF extends TCPDF {
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(12);
+        $height = $commonHeight('datosEconomicos', '6');
+        
         if ($this->solicitud->deudas) {
-            $this->MultiCell(310, 20, 'Endeudado con ' . $this->solicitud->acreedor, array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L', false, 0);
-            $this->MultiCell(100, 20, 'Importe: $' . $this->solicitud->importe_deudas, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+            $this->MultiCell(310, $height, 'Endeudado con ' . $this->solicitud->acreedor, array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L', false, 0);
+            $this->MultiCell(100, $height, 'Importe: $' . $this->solicitud->importe_deudas, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
         } else {
             $this->MultiCell(410, 20, 'No tiene deudas', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
         }
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(10);
-        $this->Cell(410, 14, 'Abono Mensual', array('LR' => $borderStyleOuterCell), 1);
+        $this->Cell(205, 14, 'Abono Mensual', array('L' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell));
+        $this->Cell(205, 14, 'Gastos Mensuales', array('R' => $borderStyleOuterCell), 1);
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(12);
-        $this->MultiCell(410, 20, '$' . $this->solicitud->abono_mensual, array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
-        $this->SetX($this->getDestination()['columna2']['x']);
+        $height = $commonHeight('datosEconomicos', '7');
         
-        $this->SetFontSize(10);
-        $this->Cell(410, 14, 'Gastos Mensuales', array('LR' => $borderStyleOuterCell), 1);
-        $this->SetX($this->getDestination()['columna2']['x']);
-        
-        $this->SetFontSize(12);
-        $this->MultiCell(410, 20, '$' . $this->solicitud->gastos_mensuales, array('LRB' => $borderStyleOuterCell), 'L');
+        $this->MultiCell(205, $height, '$' . $this->solicitud->abono_mensual, array('LB' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell), 'L', false, 0);
+        $this->MultiCell(205, $height, '$' . $this->solicitud->gastos_mensuales, array('RB' => $borderStyleOuterCell), 'L');
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->setDestination('columna2', $this->GetY(), '', $this->GetX());
