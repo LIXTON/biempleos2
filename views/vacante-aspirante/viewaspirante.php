@@ -15,6 +15,22 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?= 
+            Html::a(
+                Yii::t('app', 'Citar'), 
+                ['cita/create', 'vacante' => $model->id_vacante, 'aspirante[]' => $solicitud->id_aspirante], 
+                [
+                    'class' => 'btn btn-success',
+                    /*'data' => [
+                        'method' => 'post',
+                        'params' => [
+                            'vacante' => $model->id_vacante,
+                            'aspirante[]' => $solicitud->id_aspirante
+                        ]
+                    ]*/
+                ]
+            ) 
+        ?>
         <?= Html::a(Yii::t('app', 'Descargar'), ['descargar', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 

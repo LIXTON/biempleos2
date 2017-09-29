@@ -44,13 +44,13 @@ class VacanteAspiranteController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view-aspirante'],
+                        'actions' => ['index', 'view-aspirante', 'descargar'],
                         'roles' => ['empresa'],
                     ],
                     [
                         'allow' => true,
                         'actions' => ['view'],
-                        'roles' => ['@'],
+                        'roles' => ['aspirante'],
                     ],
                 ],
             ],
@@ -67,7 +67,7 @@ class VacanteAspiranteController extends Controller
      * Lists all VacanteAspirante models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($id)
     {
         /*
         SELECT solicitud.nombre, vacante_aspirante.fecha_cambio_estado
@@ -82,6 +82,7 @@ AND vacante_aspirante.estado = 'pendiente';
         */
         $query = (new \yii\db\Query())->select([
             'id' => 'vacante_aspirante.id',
+            'id_aspirante' => 'vacante_aspirante.id_aspirante',
             'aspirante' => 'solicitud.nombre',
             'fecha' => 'vacante_aspirante.fecha_cambio_estado'
         ])
@@ -92,7 +93,8 @@ AND vacante_aspirante.estado = 'pendiente';
             ->where('vacante_aspirante.estado = :estado', [':estado' => 'pendiente'])
             ->andWhere('vacante.fecha_publicacion IS NOT NULL')
             ->andWhere('vacante.fecha_finalizacion >= :fecha', [':fecha' => date('Y-m-d')])
-            ->andWhere('vacante.id_empresa = :empresa', [':empresa' => Yii::$app->user->id]);
+            ->andWhere('vacante.id_empresa = :empresa', [':empresa' => Yii::$app->user->id])
+            ->andWhere('vacante.id = :vacante', [':vacante' => $id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -100,6 +102,7 @@ AND vacante_aspirante.estado = 'pendiente';
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'id_vacante' => $id,
         ]);
     }
 
@@ -137,7 +140,11 @@ AND vacante_aspirante.estado = 'pendiente';
     public function actionViewAspirante($id)
     {
         $va = $this->findModel($id);
-        return $this->render('view', [
+        
+        if ($va->idVacante->id_empresa != Yii::$app->user->id)
+            throw new NotFoundHttpException('The requested page does not exist.');
+        
+        return $this->render('viewaspirante', [
             'model' => $va,
             'solicitud' => Solicitud::findOne(['id_aspirante' => $va->id_aspirante]),
         ]);
@@ -171,7 +178,11 @@ AND vacante_aspirante.estado = 'pendiente';
     public function actionDescargar($id)
     {
         $va = $this->findModel($id);
-        $vacante = Vacante::findOne($va->id_vacante);
+        $vacante = $va->idVacante;
+        
+        if ($vacante->id_empresa != Yii::$app->user->id)
+            throw new NotFoundHttpException('The requested page does not exist.');
+        
         $solicitud = Solicitud::findOne(['id_aspirante' => $va->id_aspirante]);
         
         $pdf = new SolicitudPDF($vacante, $solicitud);

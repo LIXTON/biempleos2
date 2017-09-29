@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
@@ -13,6 +14,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <p>
+        <?php
+        $form = ActiveForm::begin([
+            'id' => 'form-grpCitar',
+            'action' => ['cita/create', 'vacante' => $id_vacante],
+            'method' => 'get',
+        ]);
+        echo Html::submitButton('Citar Seleccionados', ['class' => 'btn btn-success']);
+        ActiveForm::end();
+        ?>
+    </p>
 <?php Pjax::begin(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,15 +36,25 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view}',
+                'template' => '{view-aspirante}',
                 'buttons' => [
-                    /*'lista' => function ($url, $model, $key) {
-                        return Html::a('<span class=\'glyphicon glyphicon-th-list\'></span>', ['vacante-aspirante/index', 'id_vacante' => $model->id]);
-                    }*/
+                    'view-aspirante' => function ($url, $model, $key) {
+                        return Html::a('<span class=\'glyphicon glyphicon-eye-open\'></span>', $url);
+                    }
                 ],
                 'urlCreator' => function ($action, $model, $key, $index, $this) {
                     return $action . "?id=" . $model['id'];
                 }
+            ],
+            [
+                'class' => 'yii\grid\CheckboxColumn',
+                'checkboxOptions' => function ($model, $key, $index, $column) {
+                    return [
+                        'form' => 'form-grpCitar',
+                        'value' => $model['id_aspirante']
+                    ];
+                },
+                'name' => 'aspirante'
             ],
         ],
     ]); ?>

@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{view} {update} {lista}',
                 'buttons' => [
                     'lista' => function ($url, $model, $key) {
-                        return Html::a('<span class=\'glyphicon glyphicon-th-list\'></span>', ['vacante-aspirante/index', 'id_vacante' => $model->id]);
+                        return Html::a('<span class=\'glyphicon glyphicon-th-list\'></span>', ['vacante-aspirante/index', 'id' => $model->id]);
                     }
                 ],
                 'urlCreator' => function ($action, $model, $key, $index, $this) {

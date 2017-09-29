@@ -50,7 +50,7 @@ class VacanteAspirante extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            ['id_vacante', 'required'],
+            ['id_vacante', 'required', 'on' => self::SCENARIO_CREATE],
             [['id', 'id_aspirante', 'id_vacante'], 'integer'],
             [['fecha_cambio_estado'], 'safe'],
             [['estado'], 'string', 'max' => 20],

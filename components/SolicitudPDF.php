@@ -127,6 +127,7 @@ class SolicitudPDF extends TCPDF {
         // ---------------------------------------------------------
         //  CUADRO GRANDE DOCUMENTACIÓN
         // ---------------------------------------------------------
+        $this->SetFont('helvetica', 'B', 14);
         $this->SetXY($this->getDestination()['columna1']['x'], $this->getDestination()['columna1']['y']);
         $this->Cell(187, 20, 'Documentación', array('LRTB' => $borderStyleOuterCell), 1, 'C');
         
@@ -736,11 +737,11 @@ class SolicitudPDF extends TCPDF {
         $this->Cell(555, 20, 'Referencias Personales', array('LRTB' => $borderStyleOuterCell), 1, 'C');
         
         $this->SetFont('helvetica', '', 10);
-        $this->Cell(130, 27, 'Nombre', array('L' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell));
-        $this->Cell(145, 27, 'Domicilio', array('R' => $borderStyleInnerCell));
-        $this->Cell(90, 27, 'Teléfono', array('R' => $borderStyleInnerCell));
-        $this->Cell(125, 27, 'Ocupación', array('R' => $borderStyleInnerCell));
-        $this->Cell(65, 27, 'Tiempo de conocerlo', array('R' => $borderStyleOuterCell), 1);
+        $this->MultiCell(130, 27, 'Nombre', array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell), 'C', false, 0, '', '', true, 0, false, true, 20, 'B');
+        $this->MultiCell(145, 27, 'Domicilio', array('RB' => $borderStyleInnerCell), 'C', false, 0, '', '', true, 0, false, true, 20, 'B');
+        $this->MultiCell(90, 27, 'Teléfono', array('RB' => $borderStyleInnerCell), 'C', false, 0, '', '', true, 0, false, true, 20, 'B');
+        $this->MultiCell(125, 27, 'Ocupación', array('RB' => $borderStyleInnerCell), 'C', false, 0, '', '', true, 0, false, true, 20, 'B');
+        $this->MultiCell(65, 27, 'Tiempo de conocerlo', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'C');
         
         $this->SetFontSize(12);
         $height = $commonHeight('referenciasPersonales', '1');
@@ -785,29 +786,29 @@ class SolicitudPDF extends TCPDF {
         $this->Cell(140, 20, 'Datos Generales', array('LRTB' => $borderStyleOuterCell), 1, 'C');
         
         $this->SetFont('helvetica', '', 10);
-        $this->Cell(85, 27, 'Parientes en la empresa', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1, 'R');
-        $this->Cell(85, 27, 'Afianzado', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1, 'R');
-        $this->Cell(85, 27, 'Afiliado a un sindicato', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1, 'R');
-        $this->Cell(85, 27, 'Tiene seguro de vida', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1, 'R');
-        $this->Cell(85, 27, 'Puede viajar', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1, 'R');
-        $this->Cell(85, 27, 'Puede cambiar residencia', array('LB' => $borderStyleOuterCell), 1, 'R');
-        $this->SetXY(85, $this->getDestination()['columna1']['y']);
+        $this->MultiCell(85, 27, 'Parientes en la empresa', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        $this->MultiCell(85, 27, 'Afianzado', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        $this->MultiCell(85, 27, 'Afiliado a un sindicato', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        $this->MultiCell(85, 27, 'Tiene seguro de vida', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        $this->MultiCell(85, 27, 'Puede viajar', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        $this->MultiCell(85, 27, 'Puede cambiar residencia', array('LB' => $borderStyleOuterCell), 'R');
+        $this->SetXY($this->getDestination()['columna1']['x'] + 85, $this->getDestination()['columna1']['y'] + 20);
         
         $this->SetFontSize(12);
         $this->Cell(55, 27, $this->solicitud->parientes ? 'Si':'No', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
-        $this->SetX(85);
+        $this->SetX($this->getDestination()['columna1']['x'] + 85);
         $this->Cell(55, 27, $this->solicitud->afianzado ? 'Si':'No', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
-        $this->SetX(85);
+        $this->SetX($this->getDestination()['columna1']['x'] + 85);
         $this->Cell(55, 27, $this->solicitud->sindicato ? 'Si':'No', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
-        $this->SetX(85);
+        $this->SetX($this->getDestination()['columna1']['x'] + 85);
         $this->Cell(55, 27, $this->solicitud->seguro_vida ? 'Si':'No', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
-        $this->SetX(85);
+        $this->SetX($this->getDestination()['columna1']['x'] + 85);
         $this->Cell(55, 27, $this->solicitud->viajar ? 'Si':'No', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
-        $this->SetX(85);
+        $this->SetX($this->getDestination()['columna1']['x'] + 85);
         $this->Cell(55, 27, $this->solicitud->cambiar_residencia ? 'Si':'No', array('RB' => $borderStyleOuterCell), 1);
         
         $this->setDestination('columna1', $this->GetY(), '', $this->GetX());
-        $this->SetXY($this->getDestination()['columna2']['x'] + 85, $this->getDestination()['columna2']['y']);
+        $this->SetXY($this->getDestination()['columna2']['x'], $this->getDestination()['columna2']['y']);
         
         // ---------------------------------------------------------
         // ---------------------------------------------------------
@@ -827,7 +828,12 @@ class SolicitudPDF extends TCPDF {
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(12);
-        $this->MultiCell(410, 20, $this->solicitud->otros_ingresos ? ('Cuenta con otros ingresos            Importe Mensual: $' . $this->solicitud->importe_ingresos):'No cuenta con otros ingresos', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
+        if ($this->solicitud->otros_ingresos) {
+            $this->MultiCell(210, 20, "Cuenta con otros ingresos", array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L', false, 0);
+            $this->MultiCell(200, 20, "Importe Mensual: $" . $this->solicitud->importe_ingresos, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        } else {
+            $this->MultiCell(410, 20, 'No cuenta con otros ingresos', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        }
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(10);
@@ -835,7 +841,12 @@ class SolicitudPDF extends TCPDF {
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(12);
-        $this->MultiCell(410, 20, $this->solicitud->conyuge_trabaja ? ('Si hay aportaciones                  Percepción Mensual: $' . $this->solicitud->percepcion):'No hay ingresos de su parte', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
+        if ($this->solicitud->conyuge_trabaja) {
+            $this->MultiCell(210, 20, "Si hay aportaciones", array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L', false, 0);
+            $this->MultiCell(200, 20, "Percepción Mensual: $" . $this->solicitud->percepcion, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        } else {
+            $this->MultiCell(410, 20, 'No hay ingresos de su parte', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        }
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(10);
@@ -843,7 +854,12 @@ class SolicitudPDF extends TCPDF {
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(12);
-        $this->MultiCell(410, 20, $this->solicitud->casa_propia ? ('Con casa propia                      Valor Aproximado: $' . $this->solicitud->valor_casa):'Sin casa propia', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
+        if ($this->solicitud->casa_propia) {
+            $this->MultiCell(210, 20, "Con casa propia", array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L', false, 0);
+            $this->MultiCell(200, 20, "Valor Aproximado: $" . $this->solicitud->valor_casa, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        } else {
+            $this->MultiCell(410, 20, 'Sin casa propia', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        }
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(10);
@@ -851,8 +867,51 @@ class SolicitudPDF extends TCPDF {
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(12);
-        $this->MultiCell(410, 20, $this->solicitud->paga_renta ? ('Actualmente rentando                 Renta Mensual: $' . $this->solicitud->renta):'No esta rentando', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
+        if ($this->solicitud->paga_renta) {
+            $this->MultiCell(210, 20, "Actualmente rentando" , array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L', false, 0);
+            $this->MultiCell(200, 20, "Renta Mensual: $" . $this->solicitud->renta, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        } else {
+            $this->MultiCell(410, 20, 'No esta rentando', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        }
         $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(10);
+        $this->Cell(410, 14, 'Automóvil', array('LR' => $borderStyleOuterCell), 1);
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(12);
+        $this->MultiCell(410, 20, $this->solicitud->automovil ? "Tiene":"No tiene", array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(10);
+        $this->Cell(410, 14, 'Deudas', array('LR' => $borderStyleOuterCell), 1);
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(12);
+        if ($this->solicitud->deudas) {
+            $this->MultiCell(310, 20, 'Endeudado con ' . $this->solicitud->acreedor, array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L', false, 0);
+            $this->MultiCell(100, 20, 'Importe: $' . $this->solicitud->importe_deudas, array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
+        } else {
+            $this->MultiCell(410, 20, 'No tiene deudas', array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        }
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(10);
+        $this->Cell(410, 14, 'Abono Mensual', array('LR' => $borderStyleOuterCell), 1);
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(12);
+        $this->MultiCell(410, 20, '$' . $this->solicitud->abono_mensual, array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(10);
+        $this->Cell(410, 14, 'Gastos Mensuales', array('LR' => $borderStyleOuterCell), 1);
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
+        $this->SetFontSize(12);
+        $this->MultiCell(410, 20, '$' . $this->solicitud->gastos_mensuales, array('LRB' => $borderStyleOuterCell), 'L');
+        $this->SetX($this->getDestination()['columna2']['x']);
+        
         $this->setDestination('columna2', $this->GetY(), '', $this->GetX());
 
 

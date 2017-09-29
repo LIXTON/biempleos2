@@ -28,11 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <?= $form->field($model, 'contrasena')->passwordInput() ?>
 
-        <?php
-        // borrar la linea de abajo y cambiar el type al input de abajo a hidden
-        ?>
-        <p>por cuestiones de pruebas se dejo el login en type = text</p>
-        <input type="text" name="gcm">
+        <?= Html::hiddenInput('gcm', ''); ?>
 
         <?= $form->field($model, 'rememberMe')->checkbox([
             'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",

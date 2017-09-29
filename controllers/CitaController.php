@@ -11,6 +11,10 @@ use yii\filters\VerbFilter;
 //  Las siguientes dos lineas son para el funcionamiento de los roles   //
 use yii\filters\AccessControl;
 use app\components\AccessRule;
+//  Se agregan los siguientes modelos
+use app\models\Local;
+use app\models\VacanteAspirante;
+use app\models\Vacante;
 
 /**
  * CitaController implements the CRUD actions for Cita model.
@@ -121,28 +125,30 @@ class CitaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id_v)
+    public function actionCreate()
     {
         $cita = new Cita();
         $locales = Local::findAll(['id_empresa' => Yii::$app->user->id]);
-        $v = Vacante::findOne(["id" => $id_v, "id_empresa" => Yii::$app->user->id]);
-        $va = $v->vacanteAspirantes;
+        $va = VacanteAspirante::find()->where(['id_vacante' => Yii::$app->request->get('vacante'), 'id_aspirante' => Yii::$app->request->get('aspirante')])->all();
+        $vacante = Vacante::findOne(Yii::$app->request->get('vacante'));
+        
+        if (count($va) == 0) {
+            Yii::$app->session->setFlash('error', 'Los aspirantes ingresados no estan asociados a la vacante');
+            return $this->goBack((!empty(Yii::$app->request->referrer) ? Yii::$app->request->referrer : null));
+        }
 
         if ($cita->load(Yii::$app->request->post())) {
-            $va = Yii::$app->request->post('VacanteAspirante')['id_aspirante'];
-            if(is_array($va) && (count($va) <= $v->no_cita || $v->no_cita < 0)) {
-                foreach($va as $i) {
-                    $v->no_cita = $v->no_cita < 0 ? $v->no_cita:($v->no_cita - 1);
-
-                    $i->estado = "aceptada";
-                    $i->save();
-                    $cita->id_va = $i->id;
-                    //  Posible cambio a un unico sql que se ejecute al salir del foreach
+            if (count($cita->id_va) <= $vacante->no_cita || $vacante->no_cita == -1) {
+                $idVA = $cita->id_va;
+                foreach($idVA as $i) {
+                    $vacante->no_cita -= ($vacante->no_cita == -1 ? 0:1);
+                    
+                    $cita->id_va = $i;
+                    $cita->estado = "aceptada";
+                    
                     $cita->save();
                 }
-                
-                if($v->no_cita >= 0)
-                    $v->save();
+                $vacante->save();
                 
                 return $this->redirect(['view', 'id' => $cita->id]);
             } else {

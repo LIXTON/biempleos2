@@ -1,0 +1,17 @@
+CAMBIOS DE SOLICITUD
+[] Eliminacion de atributos por innecesarios o redundantes
+    licencia - bool si tiene licencia o no
+    deportista - bool si practica algun deporte ¿practica algun deporte?¿Cual?/¿Cual deporte practica? si no practica ninguna deje en blanco
+    trabajo_anterior - bool si tuvo o no un trabajo
+    parientes - bool si tiene parientes en la empresa
+
+[] Cambios de atributos a otro tipo
+    club - [bool a string] Indica si esta en un club
+    titulo - [tinyint a string] Indica el titulo de educacion
+    tiempo_trabajo - [double a string] Indica el tiempo que trabajo
+    dependientes - [int a string] indica el numero de dependientes
+    automovil - [bool a string] indica si tiene carro propio
+    
+[] Fusion de atributos por redundancia
+    idioma y porcentaje - string indica el idioma que lleva junto a su porcentaje
+    

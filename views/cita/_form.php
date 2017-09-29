@@ -13,16 +13,17 @@ use yii\helpers\ArrayHelper;
 $locales = ArrayHelper::map($locales, 'id', function ($locales, $defaultValue) {
     return $locales->calle . ' ' . $locales->numero . ' ' . $locales->colonia . ' C.P. ' . $locales->codigo_postal . ' ' . $locales->ciudad . ', ' . $locales->estado . ', ' . $locales->pais;
 });
-$va = ArrayHelper::map($va, 'id', function ($va, $defaultValue) {
-    return $va->idAspirate->solicitud->nombre;
+$aspirante = ArrayHelper::map($va, 'id', function ($va, $defaultValue) {
+    return $va->idAspirante->solicitud->nombre;
 });
+$cita->id_va = array_keys($aspirante);
 ?>
 
 <div class="cita-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($va, 'id')->checkBoxList($va) ?>
+    <?= $form->field($cita, 'id_va')->checkBoxList($aspirante) ?>
 
     <?= $form->field($cita, 'id_local')->dropdownList($locales, ['prompt' => Yii::t('app', 'Selecciona un local')])->label('Local') ?>
 

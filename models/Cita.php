@@ -73,7 +73,7 @@ class Cita extends \yii\db\ActiveRecord
             'id_empresa' => Yii::t('app', 'Id Empresa'),
             'id_local' => Yii::t('app', 'Id Local'),
             'direccion' => Yii::t('app', 'Direccion'),
-            'id_va' => Yii::t('app', 'Id Va'),
+            'id_va' => Yii::t('app', 'Aspirante(s)'),
             'fecha' => Yii::t('app', 'Fecha'),
             'mensaje' => Yii::t('app', 'Mensaje'),
         ];
