@@ -47,5 +47,3 @@ function send_FCM($gcm_keys, $title, $message, $subtitle){
 	curl_close( $ch );
 	return $result;
 }
-
-?>

@@ -1,17 +1,42 @@
 CAMBIOS DE SOLICITUD
-[] Eliminacion de atributos por innecesarios o redundantes
-    licencia - bool si tiene licencia o no
-    deportista - bool si practica algun deporte ¿practica algun deporte?¿Cual?/¿Cual deporte practica? si no practica ninguna deje en blanco
-    trabajo_anterior - bool si tuvo o no un trabajo
-    parientes - bool si tiene parientes en la empresa
+[x] Eliminacion de atributos por innecesarios o redundantes
+    - licencia - bool si tiene licencia o no
+    - deportista - bool si practica algun deporte ¿practica algun deporte?¿Cual?/¿Cual deporte practica? si no practica ninguna deje en blanco
+    - trabajo_anterior - bool si tuvo o no un trabajo
+    - parientes - bool si tiene parientes en la empresa
 
-[] Cambios de atributos a otro tipo
-    club - [bool a string] Indica si esta en un club
-    titulo - [tinyint a string] Indica el titulo de educacion
-    tiempo_trabajo - [double a string] Indica el tiempo que trabajo
-    dependientes - [int a string] indica el numero de dependientes
-    automovil - [bool a string] indica si tiene carro propio
+[x] Cambios de atributos a otro tipo
+    - club - [bool a string] Indica si esta en un club
+    - titulo - [tinyint a string] Indica el titulo de educacion
+    - tiempo_trabajo - [double a string] Indica el tiempo que trabajo
+    - dependientes - [int a string] indica el numero de dependientes
+    x automovil - [bool a string] indica si tiene carro propio
     
-[] Fusion de atributos por redundancia
-    idioma y porcentaje - string indica el idioma que lleva junto a su porcentaje
+[x] Fusion de atributos por redundancia
+    - idioma y porcentaje - string indica el idioma que lleva junto a su porcentaje
     
+[x] Confirmar datos eliminados
+    Datos Familiares
+        - Padre, Madre y Esposo(a) - Vivos/Fallecidos, Domicilio, Ocupacion
+        - Nombre y edades de hijos
+    Datos Personales
+        - Ciudad y Estado de residencia
+        - Lugar de nacimiento
+        - Vive con padres/familia/parientes/solo
+    Estado de Salud
+        x Estado actual de salud - Bueno/Regular/Malo
+        x Padecimiento de alguna enfermedad crónica
+    Escolaridad
+        x Estudios efectuando en la actualidad - Escuela, Horario, Curso o Carrera, Grado
+    Empleo
+        - Solicitar informes del aspirante
+    Datos Generales
+        x [si] Afianzado - a donde
+        x [si] Sindicato - cual
+        x [si] Seguro de vida - cual
+        x [no] Viajar - razones
+        x [no] Cambiar residencia - razones
+        x Fecha a trabajar
+    Datos Economicos
+        x [si] Ingresos - describir
+        x [si] Conyuge trabaja - donde

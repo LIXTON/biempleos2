@@ -20,33 +20,42 @@ use Yii;
  * @property string $numero
  * @property string $colonia
  * @property string $codigo_postal
+ * @property string $lugar_residencia
+ * @property string $lugar_nacimiento
+ * @property string $vive_con
  * @property string $curp
  * @property string $rfc
  * @property string $nss
  * @property string $afore
  * @property string $cartilla_militar
  * @property string $pasaporte
- * @property integer $licencia
  * @property integer $clase_licencia
  * @property string $numero_licencia
- * @property integer $deportista
  * @property string $deporte
- * @property integer $club
+ * @property string $club
  * @property string $pasatiempo
  * @property string $meta
+ * @property integer $padre_vivefin
+ * @property string $padre_domicilio
+ * @property string $padre_ocupacion
+ * @property integer $madre_vivefin
+ * @property string $madre_domicilio
+ * @property string $madre_ocupacion
+ * @property integer $pareja_vivefin
+ * @property string $pareja_domicilio
+ * @property string $pareja_ocupacion
+ * @property string $hijos
  * @property integer $estudio
  * @property string $escuela
  * @property string $inicio
  * @property string $finalizacion
- * @property integer $titulo
+ * @property string $titulo
  * @property string $idioma
- * @property integer $porcentaje
  * @property string $funciones_oficina
  * @property string $maquinaria_oficina
  * @property string $software
  * @property string $otras_funciones
- * @property integer $trabajo_anterior
- * @property double $tiempo_trabajo
+ * @property integer $tiempo_trabajo
  * @property string $compania
  * @property string $direccion
  * @property string $telefono
@@ -56,6 +65,7 @@ use Yii;
  * @property string $motivo_separacion
  * @property string $nombre_jefe
  * @property string $puesto_jefe
+ * @property integer $solicitud_informe
  * @property string $nombre_ref1
  * @property string $domicilio_ref1
  * @property string $telefono_ref1
@@ -71,7 +81,6 @@ use Yii;
  * @property string $telefono_ref3
  * @property string $ocupacion_ref3
  * @property double $tiempo_ref3
- * @property integer $parientes
  * @property integer $afianzado
  * @property integer $sindicato
  * @property integer $seguro_vida
@@ -85,7 +94,7 @@ use Yii;
  * @property double $valor_casa
  * @property integer $paga_renta
  * @property double $renta
- * @property integer $dependientes
+ * @property string $dependientes
  * @property integer $automovil
  * @property integer $deudas
  * @property double $importe_deudas
@@ -112,10 +121,12 @@ class Solicitud extends \yii\db\ActiveRecord
     {
         return [
             [['id_aspirante'], 'required'],
-            [['id_aspirante', 'sexo', 'estado_civil', 'licencia', 'clase_licencia', 'deportista', 'club', 'estudio', 'titulo', 'porcentaje', 'trabajo_anterior', 'parientes', 'afianzado', 'sindicato', 'seguro_vida', 'viajar', 'cambiar_residencia', 'otros_ingresos', 'conyuge_trabaja', 'casa_propia', 'paga_renta', 'dependientes', 'automovil', 'deudas'], 'integer'],
+            [['id_aspirante', 'sexo', 'estado_civil', 'clase_licencia', 'padre_vivefin', 'madre_vivefin', 'pareja_vivefin', 'estudio', 'tiempo_trabajo', 'solicitud_informe', 'afianzado', 'sindicato', 'seguro_vida', 'viajar', 'cambiar_residencia', 'otros_ingresos', 'conyuge_trabaja', 'casa_propia', 'paga_renta', 'automovil', 'deudas'], 'integer'],
             [['foto', 'nombre', 'nacionalidad', 'calle', 'numero', 'colonia', 'codigo_postal', 'curp', 'rfc', 'nss', 'afore', 'cartilla_militar', 'pasaporte', 'numero_licencia', 'deporte', 'pasatiempo', 'meta', 'escuela', 'idioma', 'funciones_oficina', 'maquinaria_oficina', 'software', 'otras_funciones', 'compania', 'direccion', 'telefono', 'puesto', 'motivo_separacion', 'nombre_jefe', 'puesto_jefe', 'nombre_ref1', 'domicilio_ref1', 'telefono_ref1', 'ocupacion_ref1', 'nombre_ref2', 'domicilio_ref2', 'telefono_ref2', 'ocupacion_ref2', 'nombre_ref3', 'domicilio_ref3', 'telefono_ref3', 'ocupacion_ref3', 'acreedor'], 'string'],
             [['fecha_nacimiento', 'inicio', 'finalizacion'], 'safe'],
-            [['estatura', 'peso', 'tiempo_trabajo', 'sueldo_inicial', 'sueldo_final', 'tiempo_ref1', 'tiempo_ref2', 'tiempo_ref3', 'importe_ingresos', 'percepcion', 'valor_casa', 'renta', 'importe_deudas', 'abono_mensual', 'gastos_mensuales'], 'number'],
+            [['estatura', 'peso', 'sueldo_inicial', 'sueldo_final', 'tiempo_ref1', 'tiempo_ref2', 'tiempo_ref3', 'importe_ingresos', 'percepcion', 'valor_casa', 'renta', 'importe_deudas', 'abono_mensual', 'gastos_mensuales'], 'number'],
+            [['lugar_residencia', 'lugar_nacimiento', 'club', 'padre_domicilio', 'padre_ocupacion', 'madre_domicilio', 'madre_ocupacion', 'pareja_domicilio', 'pareja_ocupacion', 'hijos', 'titulo'], 'string', 'max' => 255],
+            [['vive_con', 'dependientes'], 'string', 'max' => 40],
             [['id_aspirante'], 'exist', 'skipOnError' => true, 'targetClass' => Aspirante::className(), 'targetAttribute' => ['id_aspirante' => 'id_usuario']],
         ];
     }
@@ -139,32 +150,41 @@ class Solicitud extends \yii\db\ActiveRecord
             'numero' => Yii::t('app', 'Numero'),
             'colonia' => Yii::t('app', 'Colonia'),
             'codigo_postal' => Yii::t('app', 'Codigo Postal'),
+            'lugar_residencia' => Yii::t('app', 'Lugar Residencia'),
+            'lugar_nacimiento' => Yii::t('app', 'Lugar Nacimiento'),
+            'vive_con' => Yii::t('app', 'Vive Con'),
             'curp' => Yii::t('app', 'Curp'),
             'rfc' => Yii::t('app', 'Rfc'),
             'nss' => Yii::t('app', 'Nss'),
             'afore' => Yii::t('app', 'Afore'),
             'cartilla_militar' => Yii::t('app', 'Cartilla Militar'),
             'pasaporte' => Yii::t('app', 'Pasaporte'),
-            'licencia' => Yii::t('app', 'Licencia'),
             'clase_licencia' => Yii::t('app', 'Clase Licencia'),
             'numero_licencia' => Yii::t('app', 'Numero Licencia'),
-            'deportista' => Yii::t('app', 'Deportista'),
             'deporte' => Yii::t('app', 'Deporte'),
             'club' => Yii::t('app', 'Club'),
             'pasatiempo' => Yii::t('app', 'Pasatiempo'),
             'meta' => Yii::t('app', 'Meta'),
+            'padre_vivefin' => Yii::t('app', 'Padre Vivefin'),
+            'padre_domicilio' => Yii::t('app', 'Padre Domicilio'),
+            'padre_ocupacion' => Yii::t('app', 'Padre Ocupacion'),
+            'madre_vivefin' => Yii::t('app', 'Madre Vivefin'),
+            'madre_domicilio' => Yii::t('app', 'Madre Domicilio'),
+            'madre_ocupacion' => Yii::t('app', 'Madre Ocupacion'),
+            'pareja_vivefin' => Yii::t('app', 'Pareja Vivefin'),
+            'pareja_domicilio' => Yii::t('app', 'Pareja Domicilio'),
+            'pareja_ocupacion' => Yii::t('app', 'Pareja Ocupacion'),
+            'hijos' => Yii::t('app', 'Hijos'),
             'estudio' => Yii::t('app', 'Estudio'),
             'escuela' => Yii::t('app', 'Escuela'),
             'inicio' => Yii::t('app', 'Inicio'),
             'finalizacion' => Yii::t('app', 'Finalizacion'),
             'titulo' => Yii::t('app', 'Titulo'),
             'idioma' => Yii::t('app', 'Idioma'),
-            'porcentaje' => Yii::t('app', 'Porcentaje'),
             'funciones_oficina' => Yii::t('app', 'Funciones Oficina'),
             'maquinaria_oficina' => Yii::t('app', 'Maquinaria Oficina'),
             'software' => Yii::t('app', 'Software'),
             'otras_funciones' => Yii::t('app', 'Otras Funciones'),
-            'trabajo_anterior' => Yii::t('app', 'Trabajo Anterior'),
             'tiempo_trabajo' => Yii::t('app', 'Tiempo Trabajo'),
             'compania' => Yii::t('app', 'Compania'),
             'direccion' => Yii::t('app', 'Direccion'),
@@ -175,6 +195,7 @@ class Solicitud extends \yii\db\ActiveRecord
             'motivo_separacion' => Yii::t('app', 'Motivo Separacion'),
             'nombre_jefe' => Yii::t('app', 'Nombre Jefe'),
             'puesto_jefe' => Yii::t('app', 'Puesto Jefe'),
+            'solicitud_informe' => Yii::t('app', 'Solicitud Informe'),
             'nombre_ref1' => Yii::t('app', 'Nombre Ref1'),
             'domicilio_ref1' => Yii::t('app', 'Domicilio Ref1'),
             'telefono_ref1' => Yii::t('app', 'Telefono Ref1'),
@@ -190,7 +211,6 @@ class Solicitud extends \yii\db\ActiveRecord
             'telefono_ref3' => Yii::t('app', 'Telefono Ref3'),
             'ocupacion_ref3' => Yii::t('app', 'Ocupacion Ref3'),
             'tiempo_ref3' => Yii::t('app', 'Tiempo Ref3'),
-            'parientes' => Yii::t('app', 'Parientes'),
             'afianzado' => Yii::t('app', 'Afianzado'),
             'sindicato' => Yii::t('app', 'Sindicato'),
             'seguro_vida' => Yii::t('app', 'Seguro Vida'),
