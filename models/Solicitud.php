@@ -15,7 +15,7 @@ use Yii;
  * @property string $nacionalidad
  * @property double $estatura
  * @property double $peso
- * @property integer $estado_civil
+ * @property string $estado_civil
  * @property string $calle
  * @property string $numero
  * @property string $colonia
@@ -29,7 +29,7 @@ use Yii;
  * @property string $afore
  * @property string $cartilla_militar
  * @property string $pasaporte
- * @property integer $clase_licencia
+ * @property string $clase_licencia
  * @property string $numero_licencia
  * @property string $deporte
  * @property string $club
@@ -45,7 +45,7 @@ use Yii;
  * @property string $pareja_domicilio
  * @property string $pareja_ocupacion
  * @property string $hijos
- * @property integer $estudio
+ * @property string $estudio
  * @property string $escuela
  * @property string $inicio
  * @property string $finalizacion
@@ -121,13 +121,15 @@ class Solicitud extends \yii\db\ActiveRecord
     {
         return [
             [['id_aspirante'], 'required'],
-            [['id_aspirante', 'estado_civil', 'clase_licencia', 'padre_vivefin', 'madre_vivefin', 'pareja_vivefin', 'estudio', 'tiempo_trabajo', 'solicitud_informe', 'afianzado', 'sindicato', 'seguro_vida', 'viajar', 'cambiar_residencia', 'otros_ingresos', 'conyuge_trabaja', 'casa_propia', 'paga_renta', 'automovil', 'deudas'], 'integer'],
+            [['id_aspirante', 'padre_vivefin', 'madre_vivefin', 'pareja_vivefin', 'tiempo_trabajo', 'solicitud_informe', 'afianzado', 'sindicato', 'seguro_vida', 'viajar', 'cambiar_residencia', 'otros_ingresos', 'conyuge_trabaja', 'casa_propia', 'paga_renta', 'automovil', 'deudas'], 'integer'],
             [['foto', 'nombre', 'nacionalidad', 'calle', 'numero', 'colonia', 'codigo_postal', 'curp', 'rfc', 'nss', 'afore', 'cartilla_militar', 'pasaporte', 'numero_licencia', 'deporte', 'pasatiempo', 'meta', 'escuela', 'idioma', 'funciones_oficina', 'maquinaria_oficina', 'software', 'otras_funciones', 'compania', 'direccion', 'telefono', 'puesto', 'motivo_separacion', 'nombre_jefe', 'puesto_jefe', 'nombre_ref1', 'domicilio_ref1', 'telefono_ref1', 'ocupacion_ref1', 'nombre_ref2', 'domicilio_ref2', 'telefono_ref2', 'ocupacion_ref2', 'nombre_ref3', 'domicilio_ref3', 'telefono_ref3', 'ocupacion_ref3', 'acreedor'], 'string'],
             [['fecha_nacimiento', 'inicio', 'finalizacion'], 'safe'],
             [['estatura', 'peso', 'sueldo_inicial', 'sueldo_final', 'tiempo_ref1', 'tiempo_ref2', 'tiempo_ref3', 'importe_ingresos', 'percepcion', 'valor_casa', 'renta', 'importe_deudas', 'abono_mensual', 'gastos_mensuales'], 'number'],
             [['sexo'], 'string', 'max' => 15],
+            [['estado_civil'], 'string', 'max' => 20],
             [['lugar_residencia', 'lugar_nacimiento', 'club', 'padre_domicilio', 'padre_ocupacion', 'madre_domicilio', 'madre_ocupacion', 'pareja_domicilio', 'pareja_ocupacion', 'hijos', 'titulo'], 'string', 'max' => 255],
             [['vive_con', 'dependientes'], 'string', 'max' => 40],
+            [['clase_licencia', 'estudio'], 'string', 'max' => 100],
             [['id_aspirante'], 'exist', 'skipOnError' => true, 'targetClass' => Aspirante::className(), 'targetAttribute' => ['id_aspirante' => 'id_usuario']],
         ];
     }

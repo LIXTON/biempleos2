@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'peso')->textInput() ?>
 
-    <?= $form->field($model, 'estado_civil')->textInput() ?>
+    <?= $form->field($model, 'estado_civil')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'calle')->textarea(['rows' => 6]) ?>
 
@@ -56,7 +56,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'pasaporte')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'clase_licencia')->textInput() ?>
+    <?= $form->field($model, 'clase_licencia')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'numero_licencia')->textarea(['rows' => 6]) ?>
 
@@ -88,7 +88,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'hijos')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'estudio')->textInput() ?>
+    <?= $form->field($model, 'estudio')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'escuela')->textarea(['rows' => 6]) ?>
 
