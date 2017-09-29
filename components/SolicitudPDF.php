@@ -161,7 +161,7 @@ class SolicitudPDF extends TCPDF {
         $this->SetFontSize(12);
         $this->MultiCell(187, 20, $this->solicitud->pasaporte, array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
         
-        $licencia = $this->solicitud->licencia ? ($this->solicitud->clase_licencia . " #" . $this->solicitud->numero_licencia):"Sin licencia";
+        $licencia = !empty(trim($this->solicitud->clase_licencia)) ? ($this->solicitud->clase_licencia . " #" . $this->solicitud->numero_licencia):"Sin licencia";
         
         $this->SetFontSize(10);
         $this->Cell(187, 14, 'Licencia de manejar', array('LR' => $borderStyleOuterCell), 1);
@@ -179,19 +179,17 @@ class SolicitudPDF extends TCPDF {
         $this->SetFont('helvetica', 'B', 14);
         $this->Cell(187, 20, 'Hábitos Personales', array('LRTB' => $borderStyleOuterCell), 1, 'C');
 
-        $deporte = $this->solicitud->deportista ? $this->solicitud->deporte:"Ninguno";
+        $deporte = !empty(trim($this->solicitud->deporte)) ? $this->solicitud->deporte:"Ninguno";
 
         $this->SetFont('helvetica', '', 10);
         $this->Cell(187, 14, 'Deporte que práctica', array('LR' => $borderStyleOuterCell), 1);
         $this->SetFontSize(12);
         $this->MultiCell(187, 20, $deporte, array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
 
-        $club = $this->solicitud->club ? "Es parte de un club":"No es parte de un club";
-
         $this->SetFontSize(10);
         $this->Cell(187, 14, 'Club social o deportivo', array('LR' => $borderStyleOuterCell), 1);
         $this->SetFontSize(12);
-        $this->MultiCell(187, 20, $club, array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
+        $this->MultiCell(187, 20, $this->solicitud->club, array('LR' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'L');
 
         $this->SetFontSize(10);
         $this->Cell(187, 14, 'Pasatiempo favorito', array('LR' => $borderStyleOuterCell), 1);
@@ -500,7 +498,7 @@ class SolicitudPDF extends TCPDF {
         
         $this->SetFontSize(10);
         $this->Cell(120, 14, 'Fecha de Nacimiento', array('L' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell));
-        $this->Cell(243, 14, 'No. de dependientes', array('R' => $borderStyleOuterCell), 1);
+        $this->Cell(243, 14, 'Dependientes', array('R' => $borderStyleOuterCell), 1);
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFontSize(12);
@@ -529,7 +527,7 @@ class SolicitudPDF extends TCPDF {
         $this->SetX($this->getDestination()['subcolumna1']['x']);
         
         $this->SetFontSize(12);
-        $this->MultiCell(181, 0, $this->solicitud->idioma . " " . $this->solicitud->porcentaje . "%", array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell), 'L');
+        $this->MultiCell(181, 0, $this->solicitud->idioma, array('L' => $borderStyleOuterCell, 'RB' => $borderStyleInnerCell), 'L');
         $this->SetX($this->getDestination()['subcolumna1']['x']);
         
         $this->SetFontSize(10);
@@ -601,7 +599,7 @@ class SolicitudPDF extends TCPDF {
         $this->SetX($this->getDestination()['columna2']['x']);
         
         $this->SetFont('helvetica', '', 10);
-        if ($this->solicitud->trabajo_anterior) {
+        if (!empty(trim($this->solicitud->compania))) {
             
             $this->Cell(120, 14, 'Compañia', array('L' => $borderStyleOuterCell, 'R' => $borderStyleInnerCell));
             $this->Cell(243, 14, 'Dirección', array('R' => $borderStyleOuterCell), 1);
@@ -786,7 +784,6 @@ class SolicitudPDF extends TCPDF {
         $this->Cell(140, 20, 'Datos Generales', array('LRTB' => $borderStyleOuterCell), 1, 'C');
         
         $this->SetFont('helvetica', '', 10);
-        $this->MultiCell(85, 27, 'Parientes en la empresa', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
         $this->MultiCell(85, 27, 'Afianzado', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
         $this->MultiCell(85, 27, 'Afiliado a un sindicato', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
         $this->MultiCell(85, 27, 'Tiene seguro de vida', array('L' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 'R');
@@ -795,8 +792,6 @@ class SolicitudPDF extends TCPDF {
         $this->SetXY($this->getDestination()['columna1']['x'] + 85, $this->getDestination()['columna1']['y'] + 20);
         
         $this->SetFontSize(12);
-        $this->Cell(55, 27, $this->solicitud->parientes ? 'Si':'No', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
-        $this->SetX($this->getDestination()['columna1']['x'] + 85);
         $this->Cell(55, 27, $this->solicitud->afianzado ? 'Si':'No', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);
         $this->SetX($this->getDestination()['columna1']['x'] + 85);
         $this->Cell(55, 27, $this->solicitud->sindicato ? 'Si':'No', array('R' => $borderStyleOuterCell, 'B' => $borderStyleInnerCell), 1);

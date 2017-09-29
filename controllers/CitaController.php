@@ -16,7 +16,7 @@ use app\models\Local;
 use app\models\VacanteAspirante;
 use app\models\Vacante;
 //  Se agrega lo siguiente para las notificaciones android
-use app\assets\ejemploFCM.php;
+use app\assets\ejemploFCM;
 
 /**
  * CitaController implements the CRUD actions for Cita model.
@@ -138,18 +138,25 @@ class CitaController extends Controller
             Yii::$app->session->setFlash('error', 'Los aspirantes ingresados no estan asociados a la vacante');
             return $this->goBack((!empty(Yii::$app->request->referrer) ? Yii::$app->request->referrer : null));
         }
-var_dump($va);
-        die();
+
         if ($cita->load(Yii::$app->request->post())) {
             if (count($cita->id_va) <= $vacante->no_cita || $vacante->no_cita == -1) {
-                $idVA = $cita->id_va;
-                foreach($idVA as $i) {
+                $idsVA = $cita->id_va;
+                foreach($idsVA as $i) {
                     $vacante->no_cita -= ($vacante->no_cita == -1 ? 0:1);
                     
                     $cita->id_va = $i;
-                    $cita->estado = "aceptada";
-                    
                     $cita->save();
+                    
+                    $updateVA = $cita->idVa;
+                    $updateVA->estado = "aceptada";
+                    $updateVA->fecha_cambio_estado = date('Y-m-d H:i:s');
+                    $updateVA->save();
+                    
+                    $aspirante = $updateVA->idAspirante;
+                    
+                    if ($aspirante !== null && !empty($aspirante->gcm))
+                        send_FCM($aspirante->gcm, 'TITULO BIE', $cita->mensaje, 'SUBTITULO');
                 }
                 $vacante->save();
                 

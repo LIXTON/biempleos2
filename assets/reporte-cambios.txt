@@ -11,6 +11,7 @@ CAMBIOS DE SOLICITUD
     - tiempo_trabajo - [double a string] Indica el tiempo que trabajo
     - dependientes - [int a string] indica el numero de dependientes
     x automovil - [bool a string] indica si tiene carro propio
+    - sexo - [bool a string] indica el genero
     
 [x] Fusion de atributos por redundancia
     - idioma y porcentaje - string indica el idioma que lleva junto a su porcentaje

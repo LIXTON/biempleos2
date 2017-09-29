@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'fecha_nacimiento')->textInput() ?>
 
-    <?= $form->field($model, 'sexo')->textInput() ?>
+    <?= $form->field($model, 'sexo')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'nacionalidad')->textarea(['rows' => 6]) ?>
 

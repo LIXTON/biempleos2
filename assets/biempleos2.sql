@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS biempleos2.`solicitud` (
   `foto` longtext,
   `nombre` text,
   `fecha_nacimiento` date DEFAULT NULL,
-  `sexo` tinyint(1) DEFAULT NULL,
+  `sexo` varchar(15) DEFAULT NULL,
   `nacionalidad` text,
   `estatura` double DEFAULT NULL,
   `peso` double DEFAULT NULL,
