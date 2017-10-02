@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'method' => 'post',
                 ],
                 ]);
+                echo Html::a(Yii::t('app', 'Ver citas'), ['//cita/index', 'id' => $model->id], ['class' => 'btn btn-info']);
                 break;
             case "aspirante":
                 //  Opciones de aspirante

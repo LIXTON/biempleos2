@@ -37,13 +37,8 @@ class CitaController extends Controller
                 ],
                 'rules' => [
                     [
-                        'allow' => true,
-                        'actions' => ['index', 'view'],
-                        'roles' => ['@'],
-                    ],
-                    [
                         'allow' => true, 
-                        'actions' => ['create', 'update'], 
+                        'actions' => ['index', 'index-vacante', 'create', 'update', 'view'], 
                         'roles' => ['empresa'],
                     ],
                     // se agregaron permisos para aspirante
@@ -64,16 +59,51 @@ class CitaController extends Controller
     }
 
     /**
-     * Lists all Cita models.
+     * Lists all Cita models in user_empresa.
      * @return mixed
      */
     public function actionIndex()
     {
+        /*$query = (new \yii\db\Query())
+            ->select(['vacante.puesto' => 'vacante', 'cita.fecha' => 'fecha'])
+            ->from('cita')
+            ->leftJoin('vacante_aspirante', 'vacante_aspirante.id = cita.id_va')
+            ->leftJoin('vacante', 'vacante.id = vacante_aspirante.id_vacante')
+            ->where(['cita.id_empresa' => Yii::$app->user->id])
+            ->andWhere('cita.fecha >= :fecha', [':fecha' => date('Y-m-d H:i:s')]);*/
         $dataProvider = new ActiveDataProvider([
-            'query' => Cita::find(),
+            'query' => Cita::find()
+            ->select(['vacante' => 'vacante.puesto', 'fecha' => 'cita.fecha'])
+            ->joinWith('idVa.idVacante')
+            ->where(['cita.id_empresa' => Yii::$app->user->id])
+            ->andWhere('cita.fecha >= :fecha', [':fecha' => date('Y-m-d H:i:s')])
+            ->groupBy('fecha, vacante')
+            ->orderBy('fecha ASC'),
         ]);
 
         return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    /**
+     * Lists all Cita models from a specific vacante and is in user_empresa.
+     * @return mixed
+     */
+    public function actionIndexVacante($id)
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Cita::find()
+            ->select(['fecha' => 'cita.fecha', 'direccion' => 'cita.direccion', 'local' => 'CONCAT(ISNULL(local.calle, \'\'), \' #\', ISNULL(local.numero, \'\'), \' ,\', ISNULL(local.colonia, \'\'), \' CP\', ISNULL(local.codigo_postal, \'\'))'])
+            ->joinWith(['idVa.idVacante', 'idLocal'])
+            ->where(['cita.id_empresa' => Yii::$app->user->id])
+            ->andWhere('cita.fecha >= :fecha', [':fecha' => date('Y-m-d H:i:s')])
+            ->andWhere(['vacante.id' => $id])
+            //->groupBy('fecha')
+            orderBy('fecha ASC'),
+        ]);
+
+        return $this->render('indexvacante', [
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -84,10 +114,20 @@ class CitaController extends Controller
      * @param integer $id_empresa
      * @return mixed
      */
-    public function actionView($id, $id_empresa = 0)
+    public function actionView($id, $fecha)
     {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Cita::find()
+            ->select(['aspirante' => 'solicitud.nombre', 'respuesta' => 'cita.respuesta', 'fecha' => 'cita.fecha', 'direccion' => 'cita.direccion', 'local' => 'CONCAT(ISNULL(local.calle, \'\'), \' #\', ISNULL(local.numero, \'\'), \' ,\', ISNULL(local.colonia, \'\'), \' CP\', ISNULL(local.codigo_postal, \'\'))'])
+            ->joinWith(['idVa.idAspirnte.solicitud', 'idLocal', 'idVa.idVacante'])
+            ->where(['cita.id_empresa' => Yii::$app->user->id])
+            ->andWhere(['vacante.id' => $id])
+            ->andWhere('cita.fecha >= :fecha', [':fecha' => date('Y-m-d H:i:s')])
+            ->andWhere(['like', 'cita.fecha', $fecha]),
+        ]);
+        
         return $this->render('view', [
-            'model' => $this->findModel($id, $id_empresa),
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -160,7 +200,9 @@ class CitaController extends Controller
                 }
                 $vacante->save();
                 
-                return $this->redirect(['view', 'id' => $cita->id]);
+                Yii::$app->session->setFlash('success', 'La cita se ha notificado a los aspirantes');
+                
+                return $this->redirect(['view', 'idVA' => $cita->id_va, 'fecha' => $cita->fecha]);
             } else {
                 Yii::$app->session->setFlash('error', 'Excediste el numero de aspirantes que puedes citar');
             }
@@ -186,6 +228,8 @@ class CitaController extends Controller
         $locales = Local::findAll(['id_empresa' => Yii::$app->user->id]);
         $msgError = null;
         
+        $fecha = new DateTime($cita->fecha);
+        
         if($cita->idVa->estado == "negada")
             $msgError = "rechazaste al aspirante";
         else if($cita->idVa->idVacante->fecha_finalizacion < date('Y-m-d'))
@@ -195,19 +239,37 @@ class CitaController extends Controller
         
         if($msgError !== null) {
             Yii::$app->session->setFlash('error', 'La cita no puede ser editada ya que ' . $msgError);
-            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
+            return $this->redirect(['view', 'id' => $cita->idVa->idVacante->id, 'id_empresa' => $fecha->format('Y-m-d')]);
+        } else if ($cita->respuesta == "si asistire") {
+            Yii::$app->session->setFlash('error', 'El aspirante ya acepto ir');
+            return $this->redirect(['view', 'id' => $cita->idVa->idVacante->id, 'id_empresa' => $fecha->format('Y-m-d')]);
         }
-        
-        
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id, 'id_empresa' => $model->id_empresa]);
+        
+        
+        $va = array($cita->idVa);
+        $vacante = $va->idVacante;
+
+        if ($cita->load(Yii::$app->request->post())) {
+                $cita->id_va = $cita->id_va[0];
+                $cita->save();
+
+                $aspirante = $va[0]->idAspirante;
+
+                if ($aspirante !== null && !empty($aspirante->gcm))
+                    send_FCM($aspirante->gcm, 'TITULO BIE', $cita->mensaje, 'SUBTITULO');
+                
+                Yii::$app->session->setFlash('success', 'La cita se ha notificado al aspirante');
+                
+                return $this->redirect(['view', 'idVA' => $cita->id_va, 'fecha' => $cita->fecha]);
         }
+        
+        
         
         return $this->render('update', [
-            'cita' => $model,
+            'cita' => $cita,
             'locales' => $locales,
-            'va' => array($cita->idVa),
+            'va' => $va,
         ]);
     }
 

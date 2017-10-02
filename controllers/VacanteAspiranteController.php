@@ -39,18 +39,13 @@ class VacanteAspiranteController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['create', 'indexmovil'],
+                        'actions' => ['create', 'indexmovil', 'view'],
                         'roles' => ['aspirante'],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view-aspirante', 'descargar'],
+                        'actions' => ['index', 'view-aspirante', 'descargar', 'rechazar'],
                         'roles' => ['empresa'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['view'],
-                        'roles' => ['aspirante'],
                     ],
                 ],
             ],
@@ -168,6 +163,28 @@ AND vacante_aspirante.estado = 'pendiente';
         return $this->render('create', [
             'model' => $model,
         ]);
+    }
+    
+    /**
+     * Creates a new VacanteAspirante model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionRechazar($id)
+    {
+        $va = $this->findModel($id);
+        $vacante = $va->idVacante;
+        
+        if ($vacante->id_empresa != Yii::$app->user->id)
+            throw new NotFoundHttpException('The requested page does not exist.');
+        
+        $va->estado = "rechazado";
+        $va->fecha_cambio_estado = date('Y-m-d H:i:s');
+        $va->save();
+        
+        Yii::$app->session->setFlash('success', 'Los aspirantes seleccionados han sido rechazados');
+        
+        return $this->redirect(['index', 'id' => $vacante->id]);
     }
     
     /**

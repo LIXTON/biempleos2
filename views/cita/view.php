@@ -25,17 +25,24 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            'aspirante',
+            'respuesta',
+            'fecha',
+            /*'id',
             'id_empresa',
             'id_local',
             'direccion',
-            'id_va',
-            'fecha',
-            'mensaje:ntext',
+            'id_va',*/
+            // 'fecha',
+            // 'mensaje:ntext',
+
+            ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]) ?>
+    ]); ?>
 
 </div>

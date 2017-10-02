@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ActiveForm::end();
         ?>
     </p>
-<?php Pjax::begin(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -58,4 +57,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-<?php Pjax::end(); ?></div>
+</div>
