@@ -7,6 +7,7 @@ use Yii;
 /**
  * This is the model class for table "oferta".
  *
+ * @property integer $id
  * @property integer $id_paquete
  * @property string $descuento
  * @property integer $paquete_padre
@@ -44,6 +45,7 @@ class Oferta extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'id' => Yii::t('app', 'ID'),
             'id_paquete' => Yii::t('app', 'Id Paquete'),
             'descuento' => Yii::t('app', 'Descuento'),
             'paquete_padre' => Yii::t('app', 'Paquete Padre'),

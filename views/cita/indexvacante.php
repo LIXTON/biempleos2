@@ -22,13 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'fecha',
-            /*'id',
-            'id_empresa',
-            'id_local',
-            'direccion',
-            'id_va',*/
-            // 'fecha',
-            // 'mensaje:ntext',
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => 'lugar',
+                'value' => function ($data) {
+                    return empty($data->local) ? $data->direccion : $data->local;
+                },
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

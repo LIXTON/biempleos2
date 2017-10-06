@@ -32,14 +32,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'aspirante',
             'respuesta',
+            [
+                'class' => 'yii\grid\DataColumn',
+                'header' => 'Lugar',
+                'value' => function ($data) {
+                    return empty($data->local) ? $data->direccion : $data->local;
+                },
+            ],
             'fecha',
-            /*'id',
-            'id_empresa',
-            'id_local',
-            'direccion',
-            'id_va',*/
-            // 'fecha',
-            // 'mensaje:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -15,8 +15,9 @@ use Yii;
  * @property string $duracion
  * @property double $precio
  *
- * @property Oferta $oferta
+ * @property EmpresaPaquete[] $empresaPaquetes
  * @property Oferta[] $ofertas
+ * @property Oferta[] $ofertas0
  */
 class Paquete extends \yii\db\ActiveRecord
 {
@@ -62,7 +63,15 @@ class Paquete extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOferta()
+    public function getEmpresaPaquetes()
+    {
+        return $this->hasMany(EmpresaPaquete::className(), ['id_paquete' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOfertas()
     {
         return $this->hasOne(Oferta::className(), ['id_paquete' => 'id']);
     }
@@ -70,7 +79,7 @@ class Paquete extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOfertas()
+    public function getOfertas0()
     {
         return $this->hasMany(Oferta::className(), ['paquete_padre' => 'id']);
     }

@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+//  Se utiliza para indicar que empresa la creo o la edito
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "empresa_paquete".
@@ -25,6 +27,20 @@ class EmpresaPaquete extends \yii\db\ActiveRecord
     {
         return 'empresa_paquete';
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'id_empresa',
+                'updatedByAttribute' => false,
+            ]
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -32,10 +48,9 @@ class EmpresaPaquete extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_empresa', 'id_paquete', 'no_vacante', 'fecha_expiracion'], 'required', 'message' => Yii::t('app', 'El campo no puede estar vacio')],
+            [['id_paquete', 'no_vacante', 'fecha_expiracion'], 'required', 'message' => Yii::t('app', 'El campo no puede estar vacio')],
             [['id_empresa', 'id_paquete', 'no_vacante'], 'integer'],
             [['fecha_expiracion'], 'safe'],
-            [['id_empresa'], 'exist', 'skipOnError' => true, 'targetClass' => Empresa::className(), 'targetAttribute' => ['id_empresa' => 'id_usuario']],
             [['id_paquete'], 'exist', 'skipOnError' => true, 'targetClass' => Paquete::className(), 'targetAttribute' => ['id_paquete' => 'id']],
         ];
     }

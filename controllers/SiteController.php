@@ -20,6 +20,8 @@ use app\models\EmpresaPaquete;
 use app\models\Paquete;
 use app\components\AccessRule;
 
+use yii\helpers\ArrayHelper;
+
 /**
  * Site controller
  */
@@ -237,6 +239,7 @@ class SiteController extends Controller
         $signup = new SignupForm();
         // Se crea una empresa //
         $empresa = new Empresa();
+        
         if ($signup->load(Yii::$app->request->post())) {
             if ($user = $signup->signup('empresa')) {
                 

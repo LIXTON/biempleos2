@@ -32,8 +32,13 @@ class PaqueteController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'actions' => ['view', 'create', 'update', 'delete'],
                         'roles' => ['admin'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['*'],
                     ],
                 ],
             ],
@@ -52,12 +57,13 @@ class PaqueteController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Paquete::find(),
-        ]);
+        /*$dataProvider = new ActiveDataProvider([
+            'query' => Paquete::find()->joinWith('oferta'),
+        ]);*/
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            //'dataProvider' => $dataProvider,
+            'paquetes' => Paquete::find()->joinWith('oferta')->all,
         ]);
     }
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-09-2017 a las 18:41:09
+-- Tiempo de generación: 03-10-2017 a las 17:34:56
 -- Versión del servidor: 5.7.9
 -- Versión de PHP: 5.6.16
 
@@ -20,8 +20,8 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 -- Base de datos: `biempleos2`
 --
 
-DROP DATABASE IF EXISTS `biempleos2`;
-CREATE DATABASE IF NOT EXISTS `biempleos2`;
+DROP DATABASE IF EXISTS biempleos2.`biempleos2`;
+CREATE DATABASE IF NOT EXISTS biempleos2.`biempleos2`;
 
 -- --------------------------------------------------------
 
@@ -119,12 +119,32 @@ CREATE TABLE IF NOT EXISTS biempleos2.`local` (
 
 DROP TABLE IF EXISTS biempleos2.`oferta`;
 CREATE TABLE IF NOT EXISTS biempleos2.`oferta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_paquete` int(11) NOT NULL,
   `descuento` varchar(20) NOT NULL,
   `paquete_padre` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_paquete`),
-  KEY `paquete_padre` (`paquete_padre`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `paquete_padre` (`paquete_padre`),
+  KEY `id_paquete` (`id_paquete`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `oferta`
+--
+
+INSERT INTO `oferta` (`id`, `id_paquete`, `descuento`, `paquete_padre`) VALUES
+(1, 5, '10%', 2),
+(2, 6, '10%', 2),
+(3, 7, '10%', 2),
+(4, 8, '10%', 2),
+(5, 9, '10%', 2),
+(6, 10, '10%', 2),
+(7, 5, '20%', 3),
+(8, 6, '20%', 3),
+(9, 7, '20%', 3),
+(10, 8, '20%', 3),
+(11, 9, '20%', 3),
+(12, 10, '20%', 3);
 
 -- --------------------------------------------------------
 
@@ -142,14 +162,23 @@ CREATE TABLE IF NOT EXISTS biempleos2.`paquete` (
   `duracion` varchar(20) DEFAULT NULL,
   `precio` double NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `paquete`
 --
 
 INSERT INTO `paquete` (`id`, `nombre`, `descripcion`, `no_vacante`, `no_cita`, `duracion`, `precio`) VALUES
-(1, 'Prueba Gratuita', 'Se da 1 mes gratis con todas las funcionalidades', -1, -1, '1 mes', 0);
+(1, 'Prueba Gratuita', 'Se da 1 mes gratis con todas las funcionalidades', -1, -1, '1 mes', 0),
+(2, 'Pyme', 'Ideal para negocios pequeños que estan empezando', 3, 15, '15 dias', 197.95),
+(3, 'Franquisia', 'Ideal para empresas pequeñas o medianas que estan empezando o ya tienen experiencia', 12, 60, '1 mes', 1978.95),
+(4, 'Industrial', 'Ideal para empresas pequeñas que estan empezando', -1, -1, '1 mes', 26999.99),
+(5, '[PUV]', NULL, 1, 5, '1 semana', 72),
+(6, '[PUV]', NULL, 1, 5, '2 semanas', 126),
+(7, '[PUV]', NULL, 1, 5, '1 mes', 180),
+(8, '[PUC]', NULL, 0, 5, NULL, 36),
+(9, '[PUC]', NULL, 0, 15, NULL, 63),
+(10, '[PUC]', NULL, 0, 30, NULL, 108);
 
 -- --------------------------------------------------------
 
@@ -167,7 +196,7 @@ CREATE TABLE IF NOT EXISTS biempleos2.`solicitud` (
   `nacionalidad` text,
   `estatura` double DEFAULT NULL,
   `peso` double DEFAULT NULL,
-  `estado_civil` varchar(15) DEFAULT NULL,
+  `estado_civil` varchar(20) DEFAULT NULL,
   `calle` text,
   `numero` text,
   `colonia` text,
@@ -187,12 +216,15 @@ CREATE TABLE IF NOT EXISTS biempleos2.`solicitud` (
   `club` varchar(255) DEFAULT NULL,
   `pasatiempo` text,
   `meta` text,
+  `padre_nombre` text,
   `padre_vivefin` tinyint(4) DEFAULT NULL,
   `padre_domicilio` varchar(255) DEFAULT NULL,
   `padre_ocupacion` varchar(255) DEFAULT NULL,
+  `madre_nombre` text,
   `madre_vivefin` tinyint(4) DEFAULT NULL,
   `madre_domicilio` varchar(255) DEFAULT NULL,
   `madre_ocupacion` varchar(255) DEFAULT NULL,
+  `pareja_nombre` text,
   `pareja_vivefin` tinyint(4) DEFAULT NULL,
   `pareja_domicilio` varchar(255) DEFAULT NULL,
   `pareja_ocupacion` varchar(255) DEFAULT NULL,
@@ -325,61 +357,61 @@ CREATE TABLE IF NOT EXISTS biempleos2.`vacante_aspirante` (
 -- Filtros para la tabla `aspirante`
 --
 ALTER TABLE biempleos2.`aspirante`
-  ADD CONSTRAINT `FK_UsuarioAspirante` FOREIGN KEY (`id_usuario`) REFERENCES biempleos2. `usuario` (`id`);
+  ADD CONSTRAINT `FK_UsuarioAspirante` FOREIGN KEY (`id_usuario`) REFERENCES biempleos2.`usuario` (`id`);
 
 --
 -- Filtros para la tabla `cita`
 --
 ALTER TABLE biempleos2.`cita`
-  ADD CONSTRAINT `FK_EmpresaCita` FOREIGN KEY (`id_empresa`) REFERENCES biempleos2. `empresa` (`id_usuario`),
-  ADD CONSTRAINT `FK_LocalCita` FOREIGN KEY (`id_local`) REFERENCES biempleos2. `local` (`id`),
-  ADD CONSTRAINT `FK_VACita` FOREIGN KEY (`id_va`) REFERENCES biempleos2. `vacante_aspirante` (`id`);
+  ADD CONSTRAINT `FK_EmpresaCita` FOREIGN KEY (`id_empresa`) REFERENCES biempleos2.`empresa` (`id_usuario`),
+  ADD CONSTRAINT `FK_LocalCita` FOREIGN KEY (`id_local`) REFERENCES biempleos2.`local` (`id`),
+  ADD CONSTRAINT `FK_VACita` FOREIGN KEY (`id_va`) REFERENCES biempleos2.`vacante_aspirante` (`id`);
 
 --
 -- Filtros para la tabla `empresa`
 --
 ALTER TABLE biempleos2.`empresa`
-  ADD CONSTRAINT `FK_UsuarioEmpresa` FOREIGN KEY (`id_usuario`) REFERENCES biempleos2. `usuario` (`id`);
+  ADD CONSTRAINT `FK_UsuarioEmpresa` FOREIGN KEY (`id_usuario`) REFERENCES biempleos2.`usuario` (`id`);
 
 --
 -- Filtros para la tabla `empresa_paquete`
 --
 ALTER TABLE biempleos2.`empresa_paquete`
-  ADD CONSTRAINT `FK_EmpresaEP` FOREIGN KEY (`id_empresa`) REFERENCES biempleos2. `empresa` (`id_usuario`),
-  ADD CONSTRAINT `FK_PaqueteEP` FOREIGN KEY (`id_paquete`) REFERENCES biempleos2. `paquete` (`id`);
+  ADD CONSTRAINT `FK_EmpresaEP` FOREIGN KEY (`id_empresa`) REFERENCES biempleos2.`empresa` (`id_usuario`),
+  ADD CONSTRAINT `FK_PaqueteEP` FOREIGN KEY (`id_paquete`) REFERENCES biempleos2.`paquete` (`id`);
 
 --
 -- Filtros para la tabla `local`
 --
 ALTER TABLE biempleos2.`local`
-  ADD CONSTRAINT `FK_EmpresaLocal` FOREIGN KEY (`id_empresa`) REFERENCES biempleos2. `empresa` (`id_usuario`);
+  ADD CONSTRAINT `FK_EmpresaLocal` FOREIGN KEY (`id_empresa`) REFERENCES biempleos2.`empresa` (`id_usuario`);
 
 --
 -- Filtros para la tabla `oferta`
 --
 ALTER TABLE biempleos2.`oferta`
-  ADD CONSTRAINT `FK_PaqueteOferta` FOREIGN KEY (`id_paquete`) REFERENCES biempleos2. `paquete` (`id`),
-  ADD CONSTRAINT `FK_PaquetePadreOferta` FOREIGN KEY (`paquete_padre`) REFERENCES biempleos2. `paquete` (`id`);
+  ADD CONSTRAINT `FK_PaqueteOferta` FOREIGN KEY (`id_paquete`) REFERENCES biempleos2.`paquete` (`id`),
+  ADD CONSTRAINT `FK_PaquetePadreOferta` FOREIGN KEY (`paquete_padre`) REFERENCES biempleos2.`paquete` (`id`);
 
 --
 -- Filtros para la tabla `solicitud`
 --
 ALTER TABLE biempleos2.`solicitud`
-  ADD CONSTRAINT `FK_AspiranteSolicitud` FOREIGN KEY (`id_aspirante`) REFERENCES biempleos2. `aspirante` (`id_usuario`);
+  ADD CONSTRAINT `FK_AspiranteSolicitud` FOREIGN KEY (`id_aspirante`) REFERENCES biempleos2.`aspirante` (`id_usuario`);
 
 --
 -- Filtros para la tabla `vacante`
 --
 ALTER TABLE biempleos2.`vacante`
-  ADD CONSTRAINT `FK_EmpresaVacante` FOREIGN KEY (`id_empresa`) REFERENCES biempleos2. `empresa` (`id_usuario`),
-  ADD CONSTRAINT `FK_LocalVacante` FOREIGN KEY (`id_local`) REFERENCES biempleos2. `local` (`id`);
+  ADD CONSTRAINT `FK_EmpresaVacante` FOREIGN KEY (`id_empresa`) REFERENCES biempleos2.`empresa` (`id_usuario`),
+  ADD CONSTRAINT `FK_LocalVacante` FOREIGN KEY (`id_local`) REFERENCES biempleos2.`local` (`id`);
 
 --
 -- Filtros para la tabla `vacante_aspirante`
 --
 ALTER TABLE biempleos2.`vacante_aspirante`
-  ADD CONSTRAINT `FK_AspiranteVA` FOREIGN KEY (`id_aspirante`) REFERENCES biempleos2. `aspirante` (`id_usuario`),
-  ADD CONSTRAINT `FK_VacanteVA` FOREIGN KEY (`id_vacante`) REFERENCES biempleos2. `vacante` (`id`);
+  ADD CONSTRAINT `FK_AspiranteVA` FOREIGN KEY (`id_aspirante`) REFERENCES biempleos2.`aspirante` (`id_usuario`),
+  ADD CONSTRAINT `FK_VacanteVA` FOREIGN KEY (`id_vacante`) REFERENCES biempleos2.`vacante` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
