@@ -6,11 +6,11 @@ use yii\bootstrap\NavBar;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\widgets\ActiveForm;
-use app\assets\AppAsset;
+use app\assets\IndexAsset;
 use app\models\LoginForm;
 use app\widgets\Alert;
 
-AppAsset::register($this);
+IndexAsset::register($this);
 
 $this->title = 'My Yii Application';
 ?>
@@ -95,7 +95,6 @@ $this->title = 'My Yii Application';
         <footer class="row text-center">
             <div class="col-sm-2">
                 <?= Html::img('@web/images/logo.png') ?>
-                <img src="/images/logo.png">
             </div>
             <div class="col-sm-8">
                 <div class="col-sm-4">

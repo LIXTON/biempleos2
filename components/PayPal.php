@@ -25,8 +25,8 @@ class PayPal {
 
 		$paypal = new \PayPal\Rest\ApiContext(
 		new \PayPal\Auth\OAuthTokenCredential(
-			'AUCV9yXGwq8dzsyrsZ4DsMHBwzRR57WCMpYuaop73g5vePgH2zieEnk8JzTbmOr1k0DnfCqyfPA6qnJ3',
-			'EJeSwzykwhg68B_rDwNxdrZpgmK6lDeroNI18UfV_TIpGGGRl4S8ZLC0Np9fIMyladqJQ50B3mwZ9Pzl'
+			'AbwN-3Ept9f7BxgTIwUaazVltJC5EjLmJ5zUPipJsPOvL-eVjWfi4Hj1An3AeXttHm_spej8n6fjTkhI',
+			'EPnqiFsy_CmboIluDH3b81EfcbeDVxSJdn3vDJnIEWn8tZwG94oSjlcAUTpK5BfH9JPQuMsu_tjitbZY'
 			)
 		);
         
@@ -127,8 +127,8 @@ class PayPal {
 	public static function process($paymentID, $payerID) {
 		$paypal = new \PayPal\Rest\ApiContext(
 		new \PayPal\Auth\OAuthTokenCredential(
-			'AUCV9yXGwq8dzsyrsZ4DsMHBwzRR57WCMpYuaop73g5vePgH2zieEnk8JzTbmOr1k0DnfCqyfPA6qnJ3',
-			'EJeSwzykwhg68B_rDwNxdrZpgmK6lDeroNI18UfV_TIpGGGRl4S8ZLC0Np9fIMyladqJQ50B3mwZ9Pzl'
+			'AbwN-3Ept9f7BxgTIwUaazVltJC5EjLmJ5zUPipJsPOvL-eVjWfi4Hj1An3AeXttHm_spej8n6fjTkhI',
+			'EPnqiFsy_CmboIluDH3b81EfcbeDVxSJdn3vDJnIEWn8tZwG94oSjlcAUTpK5BfH9JPQuMsu_tjitbZY'
 			)
 		);
 

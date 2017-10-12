@@ -93,7 +93,7 @@ class PaqueteController extends Controller
             Yii::$app->session->setFlash('error', 'El pago no se realizo');
         }
         
-        return $this->render('confirmar-pago');
+        return $this->redirect(['empresa/view']);
     }
 
     /**
