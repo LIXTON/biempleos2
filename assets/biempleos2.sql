@@ -300,11 +300,11 @@ CREATE TABLE IF NOT EXISTS biempleos2.`usuario` (
   `correo` varchar(255) NOT NULL,
   `auth_key` varchar(32) NOT NULL,
   `contrasena_hash` varchar(255) NOT NULL,
-  `contrasena_reset_token` varchar(255) DEFAULT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
   `rol` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `correo` (`correo`),
-  UNIQUE KEY `reset_token` (`contrasena_reset_token`)
+  UNIQUE KEY `reset_token` (`reset_token`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

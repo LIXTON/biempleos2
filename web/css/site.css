@@ -3,7 +3,7 @@
  * -------------------------------------
  */
 
-html,
+/*html,
 body {
     height: 100%;
 }
@@ -17,6 +17,10 @@ body {
 
 .wrap > .container {
     padding: 70px 15px 20px;
+}*/
+
+body > .container {
+    margin-bottom: 50px;
 }
 
 /*  Mismo Footer que index.css  */
@@ -150,4 +154,5 @@ a.desc:after {
 
 .alert-row {
     position: fixed;
+    margin-top: 10px;
 }

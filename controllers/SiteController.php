@@ -380,4 +380,26 @@ class SiteController extends Controller
             'chgPassword' => $chgPassword,
         ]);
     }
+    
+    /**
+     * Resets password.
+     *
+     * @param string $token
+     * @return mixed
+     * @throws BadRequestHttpException
+     */
+    public function actionChangeEmail($token = null)
+    {
+        $model = new ChgEmailForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changeEmail($token)) {
+            Yii::$app->session->setFlash('success', 'New email saved.');
+
+            return $this->goHome();
+        }
+
+        return $this->render('changeEmail', [
+            'model' => $model,
+        ]);
+    }
 }

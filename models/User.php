@@ -13,7 +13,7 @@ use yii\web\IdentityInterface;
  * @property integer $id
  * @property string $correo
  * @property string $contrasena_hash
- * @property string $contrasena_reset_token
+ * @property string $reset_token
  * @property string $auth_key
  * @property string $rol
  * @property string $contrasena write-only password
@@ -93,7 +93,24 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return static::findOne([
-            'contrasena_reset_token' => $token,
+            'reset_token' => $token,
+        ]);
+    }
+    
+    /**
+     * Finds user by email reset token
+     *
+     * @param string $token password reset token
+     * @return static|null
+     */
+    public static function findByEmailResetToken($token)
+    {
+        if (!static::isEmailResetTokenValid($token)) {
+            return null;
+        }
+
+        return static::findOne([
+            'reset_token' => $token,
         ]);
     }
 
@@ -105,12 +122,29 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function isPasswordResetTokenValid($token)
     {
-        if (empty($token)) {
+        if (empty($token) || substr($token, 0, 1) != "P") {
             return false;
         }
 
         $timestamp = (int) substr($token, strrpos($token, '_') + 1);
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        $expire = Yii::$app->params['user.resetTokenExpire'];
+        return $timestamp + $expire >= time();
+    }
+    
+    /**
+     * Finds out if email reset token is valid
+     *
+     * @param string $token email reset token
+     * @return bool
+     */
+    public static function isEmailResetTokenValid($token)
+    {
+        if (empty($token) || substr($token, 0, 1) != "E") {
+            return false;
+        }
+
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $expire = Yii::$app->params['user.resetTokenExpire'];
         return $timestamp + $expire >= time();
     }
 
@@ -172,15 +206,23 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $this->contrasena_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+        $this->reset_token = "P" . Yii::$app->security->generateRandomString() . '_' . time();
+    }
+    
+    /**
+     * Generates new email reset token
+     */
+    public function generateEmailResetToken()
+    {
+        $this->reset_token = "E" . Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
      * Removes password reset token
      */
-    public function removePasswordResetToken()
+    public function removeResetToken()
     {
-        $this->contrasena_reset_token = null;
+        $this->reset_token = null;
     }
     
     /**
